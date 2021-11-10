@@ -62,7 +62,11 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
          * для proto 3 отсутствие типа как optional в proto 2
          */
         if (isField(line)){
+            if (!fieldHasType(line)){
+                line = "optional " + line;
+            }
             System.out.println(">>>> " + line);
+            // Указан ли тип поля
         }
 
         if (!this.matchesPackagePattern(line)) {
@@ -132,6 +136,21 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
     private boolean matchesPackagePattern(String line) {
         return Pattern.compile("(package[\\s]++)(.*)(;{1}$)").matcher(line).matches();
     }
+
+    /**
+     * Указан ли тип поля
+     */
+    private boolean fieldHasType(String line){
+        String regExp = ".*(required|optional|repeated).*";
+        boolean pattern = Pattern.compile(regExp).matcher(line).matches();
+        if (pattern){
+            /*
+            Пока просто определяет
+             */
+        }
+        return pattern;
+    }
+
     /**
      * Является ли строка полем в сообщении
      */
