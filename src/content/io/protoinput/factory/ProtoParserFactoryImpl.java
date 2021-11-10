@@ -9,10 +9,6 @@ import content.io.protoinput.enums.EnumValueParser;
 import content.io.protoinput.fields.FieldParser;
 import content.io.protoinput.message.MessageParser;
 import content.io.protoinput.options.OptionParser;
-import content.io.protoinput.patterns.EnumParserConstants;
-import content.io.protoinput.patterns.FieldParserConstants;
-import content.io.protoinput.patterns.MessageParserConstants;
-import content.io.protoinput.patterns.OptionParserConstants;
 
 import java.util.regex.Pattern;
 
@@ -100,12 +96,10 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
         } else {
             retValue = false;
         }
-
         return retValue;
     }
 
     private boolean matchesPackagePattern(String line) {
-        // (package[\\s]++)(.*)(;{1}$)
         return Pattern.compile("(package[\\s]++)(.*)(;{1}$)").matcher(line).matches();
     }
 
@@ -114,9 +108,7 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
         if (this.hasJavaPackage) {
             pattern = false;
         } else {
-            // (option[\\s]++java_package[\\s]*=[\\s]*\")([a-zA-Z$]{1})(.[^\"]*+)([\"]{1}[;]{1}$)
             pattern = Pattern.compile("(option[\\s]++java_package[\\s]*=[\\s]*\")([a-zA-Z$]{1})(.[^\"]*+)([\"]{1}[;]{1}$)").matcher(line).matches();
-//            pattern = OptionParserConstants.PATTERN_JAVA_PACKAGE.matcher(line).matches();
             this.hasJavaPackage = pattern;
         }
 
@@ -124,17 +116,13 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
     }
 
     private boolean matchesJavaOuterClassnamePattern(String line) {
-        // option java_outer_classname.*
-//        return OptionParserConstants.PATTERN_JAVA_OUTER_CLASSNAME.matcher(line).matches();
         return Pattern.compile("option java_outer_classname.*").matcher(line).matches();
     }
 
     private boolean matchesMessageStartPattern(String line) {
         boolean pattern;
         if (!this.hasMessageStart && !this.hasFields) {
-            // message[\\s]*\\w++[\\s]++[{]{1}$
             pattern = Pattern.compile("message[\\s]*\\w++[\\s]++[{]{1}$").matcher(line).matches();
-//            pattern = MessageParserConstants.PATTERN_MESSAGE_START.matcher(line).matches();
             this.hasMessageStart = pattern;
             if (this.hasMessageStart) {
                 this.hasMessageEnd = false;
@@ -164,7 +152,6 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
         boolean pattern;
         if (!this.hasEnumStart) {
             pattern = Pattern.compile("[\\s]*enum[\\s]++\\w++[\\s]++[{]{1}$").matcher(line).matches();
-//            pattern = EnumParserConstants.PATTERN_ENUM_START.matcher(line).matches();
             this.hasEnumStart = pattern;
         } else {
             pattern = false;
@@ -176,9 +163,7 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
     private boolean matchesEnumValuePattern(String line) {
         boolean pattern;
         if (this.hasEnumStart && !this.hasEnumEnd) {
-            // [\\s]*[\\w0-9]++[\\s]*[=]{1}[\\s]*[0-9]++[;]{1}$
             pattern = Pattern.compile("[\\s]*[\\w0-9]++[\\s]*[=]{1}[\\s]*[0-9]++[;]{1}$").matcher(line).matches();
-//            pattern = EnumParserConstants.PATTERN_ENUM_VALUE.matcher(line).matches();
             if (!this.hasEnumValue) {
                 this.hasEnumValue = pattern;
             }
@@ -192,9 +177,7 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
     private boolean matchesEnumEndPattern(String line) {
         boolean pattern;
         if (this.hasEnumStart && this.hasEnumValue && !this.hasEnumEnd) {
-            // [\\s]*}{1}[\\s]*
             pattern = Pattern.compile("[\\s]*}{1}[\\s]*").matcher(line).matches();
-//            pattern = EnumParserConstants.PATTERN_ENUM_END.matcher(line).matches();
             this.hasEnumEnd = pattern;
         } else {
             pattern = false;
@@ -206,9 +189,7 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
     private boolean matchesMessageEndPattern(String line) {
         boolean pattern;
         if (this.hasMessageStart && this.hasFields && !this.hasMessageEnd) {
-            // message.end
             pattern = Pattern.compile("[\\s]*}{1}[\\s]*").matcher(line).matches();
-//            pattern = MessageParserConstants.PATTERN_MESSAGE_END.matcher(line).matches();
             this.hasMessageEnd = pattern;
         } else {
             pattern = false;

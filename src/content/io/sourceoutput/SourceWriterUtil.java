@@ -7,8 +7,7 @@ import content.io.exception.ProtoFileException;
 import java.io.File;
 
 enum SourceWriterUtil {
-    SourceWriterUtil() {
-    };
+    SourceWriterUtil() {};
 
     static String createDestinationFile(InputMetaData metaData, JavaFileOutput javaOutput) {
         String packageName = javaOutput.getPackageName().replace(".", "/");

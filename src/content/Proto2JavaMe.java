@@ -15,7 +15,7 @@ public final class Proto2JavaMe {
 
     public static void main(String[] args) {
         System.out.println("Starting protobuf-javame code generation, " + new Date());
-        String[] strings = {"--java_out=D:/",
+        String[] strings = {"--java_out=D:/TZ2/proto3ToJavaMe/src/generate",
                 "D:/TZ2/proto3ToJavaMe/resources/proto/user.proto"};
 
 

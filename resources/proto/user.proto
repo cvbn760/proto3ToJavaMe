@@ -1,5 +1,7 @@
 option java_outer_classname = "UserSerializer";
 
+
+
 message UserSerializer {
 
   required string firstName = 1;
