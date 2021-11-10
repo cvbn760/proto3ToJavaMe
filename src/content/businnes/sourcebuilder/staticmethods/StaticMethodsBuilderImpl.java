@@ -1,7 +1,6 @@
 package content.businnes.sourcebuilder.staticmethods;
 
-import net.jarlehansen.proto2javame.business.sourcebuilder.resource.ResourceFormatUtil;
-import net.jarlehansen.proto2javame.business.sourcebuilder.staticmethods.StaticMethodsBuilder;
+import content.businnes.sourcebuilder.resource.ResourceFormatUtil;
 
 public final class StaticMethodsBuilderImpl implements StaticMethodsBuilder {
     private final ResourceFormatUtil resourceFormat;

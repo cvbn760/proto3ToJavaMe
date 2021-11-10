@@ -1,9 +1,14 @@
 package content.businnes.sourcebuilder.instancemethods;
 
-import net.jarlehansen.proto2javame.business.sourcebuilder.instancemethods.InstanceMethodsBuilder;
-import net.jarlehansen.proto2javame.business.sourcebuilder.resource.JavaSourceCodeUtil;
-import net.jarlehansen.proto2javame.business.sourcebuilder.resource.ResourceFormatUtil;
-import net.jarlehansen.proto2javame.domain.proto.*;
+
+
+import content.businnes.sourcebuilder.resource.JavaSourceCodeUtil;
+import content.businnes.sourcebuilder.resource.ResourceFormatUtil;
+import content.domain.metadata.DataType;
+import content.domain.proto.FieldData;
+import content.domain.proto.ProtoFileInput;
+import content.domain.proto.ValidScopes;
+import content.domain.proto.ValidTypes;
 
 import java.util.Iterator;
 

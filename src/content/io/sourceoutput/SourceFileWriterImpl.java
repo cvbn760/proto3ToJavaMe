@@ -1,9 +1,9 @@
 package content.io.sourceoutput;
 
-import net.jarlehansen.proto2javame.domain.java.JavaFileOutput;
-import net.jarlehansen.proto2javame.domain.metadata.InputMetaData;
-import net.jarlehansen.proto2javame.io.exception.ProtoFileException;
-import net.jarlehansen.proto2javame.io.sourceoutput.SourceFileWriter;
+
+import content.domain.java.JavaFileOutput;
+import content.domain.metadata.InputMetaData;
+import content.io.exception.ProtoFileException;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

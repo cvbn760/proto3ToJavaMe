@@ -3,7 +3,7 @@ package content.io.protoinput.util;
 
 import content.io.exception.ProtoFileValidationException;
 
-public enum ProtoTagUtil {
+public enum ProtoTagUtil {;
     private static final String PROTO_FILE = ".proto";
 
     ProtoTagUtil() {

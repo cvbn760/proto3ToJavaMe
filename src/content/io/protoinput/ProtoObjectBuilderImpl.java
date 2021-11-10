@@ -69,9 +69,9 @@ public final class ProtoObjectBuilderImpl implements ProtoObjectBuilder {
         while (i$.hasNext()) {
             ProtoFileInput protoInput = (ProtoFileInput) i$.next();
             List<Integer> idList = new ArrayList();
-            Iterator i$ = protoInput.getFields().iterator();
+            Iterator it = protoInput.getFields().iterator();
 
-            while (i$.hasNext()) {
+            while (it.hasNext()) {
                 FieldData fieldData = (FieldData) i$.next();
                 int fieldId = fieldData.getId();
                 if (idList.contains(fieldId)) {

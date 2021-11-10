@@ -1,10 +1,9 @@
 package content;
 
 import content.businnes.generator.CodeGenerator;
+import content.businnes.generator.CodeGeneratorImpl;
 import content.domain.java.JavaFileOutput;
 import content.io.exception.Proto2JavaMeException;
-import content.modules.io.DependencyInjector;
-
 
 import java.util.Date;
 import java.util.Iterator;
@@ -17,7 +16,7 @@ public final class Proto2JavaMe {
     public static void main(String[] args) {
         System.out.println("Starting protobuf-javame code generation, " + new Date());
         long start = System.currentTimeMillis();
-        CodeGenerator codeGen = DependencyInjector.MAIN.getInstance(CodeGenerator.class);
+        CodeGenerator codeGen = new CodeGeneratorImpl();
         byte exitCode = 0;
 
         try {

@@ -1,7 +1,8 @@
 package content.io.sourceoutput;
 
-import net.jarlehansen.proto2javame.domain.java.JavaFileOutput;
-import net.jarlehansen.proto2javame.domain.metadata.InputMetaData;
+
+import content.domain.java.JavaFileOutput;
+import content.domain.metadata.InputMetaData;
 
 import java.util.List;
 

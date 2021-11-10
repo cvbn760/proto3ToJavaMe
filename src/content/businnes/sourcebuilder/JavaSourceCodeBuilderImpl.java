@@ -29,7 +29,7 @@ public final class JavaSourceCodeBuilderImpl implements JavaSourceCodeBuilder {
     private final StaticMethodsBuilder staticMethodsBuilder;
 
 
-    public JavaSourceCodeBuilderImpl(InternalClassBuilder internalClassBuilder, MainClassBuilder mainClassBuilder, EnumsBuilder enumsBuilder, InstanceMethodsBuilder privateMethodsBuilder, PublicMethodsBuilder publicMethodsBuilder, StaticMethodsBuilder staticMethodsBuilder) {
+    public JavaSourceCodeBuilderImpl() {
         this.internalClassBuilder = new InternalClassBuilderImpl();
         this.mainClassBuilder = new MainClassBuilderImpl();
         this.enumsBuilder = new EnumsBuilderImpl();
