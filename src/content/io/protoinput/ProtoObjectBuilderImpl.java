@@ -72,7 +72,7 @@ public final class ProtoObjectBuilderImpl implements ProtoObjectBuilder {
             Iterator it = protoInput.getFields().iterator();
 
             while (it.hasNext()) {
-                FieldData fieldData = (FieldData) i$.next();
+                FieldData fieldData = (FieldData) it.next();
                 int fieldId = fieldData.getId();
                 if (idList.contains(fieldId)) {
                     throw new ProtoFileValidationException("Message field id must be unique, field: " + fieldData.getName());

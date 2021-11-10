@@ -15,12 +15,16 @@ public final class Proto2JavaMe {
 
     public static void main(String[] args) {
         System.out.println("Starting protobuf-javame code generation, " + new Date());
+        String[] strings = {"--java_out=D:/",
+                "D:/TZ2/proto3ToJavaMe/resources/proto/user.proto"};
+
+
         long start = System.currentTimeMillis();
         CodeGenerator codeGen = new CodeGeneratorImpl();
         byte exitCode = 0;
 
         try {
-            List<JavaFileOutput> javaOutputList = codeGen.generateJavaSourceCode(args);
+            List<JavaFileOutput> javaOutputList = codeGen.generateJavaSourceCode(strings);
             System.out.println("SUCCESS! Created the java-object(s): ");
             Iterator i$ = javaOutputList.iterator();
 

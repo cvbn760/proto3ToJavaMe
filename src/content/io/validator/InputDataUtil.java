@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public enum InputDataUtil {
+    InputDataUtil() {
+    };
 
     public static String getDestinationDirectory(String... inputValues) {
         String destinationDirectory;
