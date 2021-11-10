@@ -44,15 +44,39 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
 
     public ProtoParser getProtoParser(String line) {
         ProtoParser protoParser = NULL_PARSER;
+
+        /**
+         * Пока просто определяет требуется ли упаковка
+         * Если [packed=true] имеется, то ее убирают
+         */
+        if(matchesFieldPackage(line)){
+            if (matchesFieldPackage(line)){
+                System.out.println("Требуется упаковка >>>>> " + line);
+                line = line.replaceAll("\\s*\\[packed\\s*=\\s*true\\]\\s*", "");
+            }
+        }
+
+        /**
+         * Пока просто определяет
+         * указан ли тип поля
+         * для proto 3 отсутствие типа как optional в proto 2
+         */
+        if (isField(line)){
+            System.out.println(">>>> " + line);
+        }
+
         if (!this.matchesPackagePattern(line)) {
             if (this.matchesJavaPackagePattern(line)) {
                 protoParser = this.optionParser;
             } else if (!this.matchesJavaOuterClassnamePattern(line)) {
                 if (this.matchesMessageStartPattern(line)) {
                     protoParser = this.messageParser;
-                } else if (this.matchesMessageFieldPattern(line)) {
+                }
+                else if (this.matchesMessageFieldPattern(line)) {
                     protoParser = this.fieldParser;
-                } else if (this.matchesEnumStartPattern(line)) {
+                }
+
+                else if (this.matchesEnumStartPattern(line)) {
                     protoParser = this.enumParser;
                 } else if (this.matchesEnumValuePattern(line)) {
                     protoParser = this.enumValueParser;
@@ -60,7 +84,13 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
                     this.resetEnumValues();
                 } else if (this.matchesMessageEndPattern(line)) {
                     this.resetAll();
-                } else if (line.trim().length() > 0) {
+                }
+                else if (this.matchesProtoSyntax(line)){
+                    // Запись о синтаксисе
+                }
+
+
+                else if (line.trim().length() > 0) {
                     throw new ProtoFileValidationException("The .proto-file is invalid, content: " + line);
                 }
             }
@@ -101,6 +131,33 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
 
     private boolean matchesPackagePattern(String line) {
         return Pattern.compile("(package[\\s]++)(.*)(;{1}$)").matcher(line).matches();
+    }
+    /**
+     * Является ли строка полем в сообщении
+     */
+    private boolean isField(String line){
+        String regExp = ".*(double|float|int32|int64|uint32|uint64|sint32|sint64|fixed32|fixed64|sfixed32|sfixed64|bool|string|bytes).*";
+        boolean pattern = Pattern.compile(regExp).matcher(line).matches();
+        if (pattern){
+            /*
+            Пока просто определяет
+             */
+        }
+        return pattern;
+    }
+
+    /**
+     * Проверяет является ли строка  указанием на тип синтаксиса
+     */
+    private boolean matchesProtoSyntax(String line){
+        String regExp = "^\\s*syntax\\s*=\\s*\"proto[2,3]\"\\s*;";
+        boolean pattern = Pattern.compile(regExp).matcher(line).matches();
+        if (pattern){
+            /*
+            Пока просто определяет
+             */
+        }
+        return pattern;
     }
 
     private boolean matchesJavaPackagePattern(String line) {
@@ -146,6 +203,21 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
         }
 
         return pattern;
+    }
+
+    /**
+     * Проверяет требуется ли для поля более эффективная упаковка
+     * [packed=true];
+     */
+    private boolean matchesFieldPackage(String line){
+        boolean pack = false;
+        String regExp = "^.*\\[packed\\s*=\\s*true\\]\\s*;$";
+        pack = Pattern.compile(regExp).matcher(line).matches();
+        if (pack){
+            // Если требуется упаковка
+
+        }
+        return pack;
     }
 
     private boolean matchesEnumStartPattern(String line) {

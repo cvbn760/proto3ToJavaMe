@@ -9,6 +9,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+
+/**
+ * Онлайн конструктор регулярных выражений
+ * http://regexpres.narod.ru/calculator.html
+ */
 public final class Proto2JavaMe {
     private Proto2JavaMe() {
     }

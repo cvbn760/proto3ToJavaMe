@@ -1,6 +1,8 @@
 option java_outer_classname = "UserSerializer";
 
-message UserSerializer {
+syntax = "proto3";
+
+message User {
 
   required string firstName = 1;
   required string lastName = 2;
@@ -9,6 +11,6 @@ message UserSerializer {
   required float weight = 5;
   required float height = 6;
   required string password = 7;
-
   repeated string roles = 8;
+  repeated uint32 test = 9 [packed=true];
 }
