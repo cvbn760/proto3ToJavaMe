@@ -1,7 +1,7 @@
 package content.domain.proto;
 
-import net.jarlehansen.proto2javame.domain.proto.ValidScopes;
-import net.jarlehansen.proto2javame.io.exception.ProtoFileValidationException;
+
+import content.io.exception.ProtoFileValidationException;
 
 import java.util.HashMap;
 import java.util.Map;

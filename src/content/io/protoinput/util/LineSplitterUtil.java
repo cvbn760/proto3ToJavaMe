@@ -5,7 +5,7 @@ import java.util.List;
 
 public enum LineSplitterUtil {
     LineSplitterUtil() {
-    }
+    };
 
     public static String[] split(String line) {
         String[] tempStrings = line.split("[\\s]++");

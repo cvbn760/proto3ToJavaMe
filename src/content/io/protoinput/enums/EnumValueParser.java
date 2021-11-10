@@ -1,8 +1,8 @@
 package content.io.protoinput.enums;
 
-import net.jarlehansen.proto2javame.domain.proto.ProtoFileInput;
-import net.jarlehansen.proto2javame.io.exception.ProtoFileValidationException;
-import net.jarlehansen.proto2javame.io.protoinput.AbstractProtoParser;
+import content.domain.proto.ProtoFileInput;
+import content.io.exception.ProtoFileValidationException;
+import content.io.protoinput.AbstractProtoParser;
 
 public class EnumValueParser extends AbstractProtoParser {
     public EnumValueParser() {

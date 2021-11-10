@@ -1,8 +1,7 @@
 package content.io.protoinput;
 
-import net.jarlehansen.proto2javame.domain.proto.ProtoFileInput;
-import net.jarlehansen.proto2javame.io.protoinput.ProtoParser;
-import net.jarlehansen.proto2javame.io.protoinput.util.LineSplitterUtil;
+import content.domain.proto.ProtoFileInput;
+import content.io.protoinput.util.LineSplitterUtil;
 
 public abstract class AbstractProtoParser implements ProtoParser {
     protected String line;

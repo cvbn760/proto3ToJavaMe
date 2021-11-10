@@ -1,9 +1,10 @@
 package content.io.protoinput.fields;
 
-import net.jarlehansen.proto2javame.domain.proto.*;
-import net.jarlehansen.proto2javame.io.exception.ProtoFileValidationException;
-import net.jarlehansen.proto2javame.io.protoinput.AbstractProtoParser;
-import net.jarlehansen.proto2javame.io.validator.ProtoFileValues;
+import content.domain.metadata.DataType;
+import content.domain.proto.*;
+import content.io.exception.ProtoFileValidationException;
+import content.io.protoinput.AbstractProtoParser;
+import content.io.validator.ProtoFileValues;
 
 public final class FieldParser extends AbstractProtoParser {
     ProtoFileInput protoInput = new ProtoFileInput();

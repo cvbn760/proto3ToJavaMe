@@ -1,15 +1,20 @@
 package content.io.protoinput.factory;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-import net.jarlehansen.proto2javame.domain.proto.ProtoFileInput;
-import net.jarlehansen.proto2javame.io.exception.ProtoFileValidationException;
-import net.jarlehansen.proto2javame.io.protoinput.ProtoParser;
-import net.jarlehansen.proto2javame.io.protoinput.factory.ProtoParserFactory;
-import net.jarlehansen.proto2javame.io.protoinput.patterns.EnumParserConstants;
-import net.jarlehansen.proto2javame.io.protoinput.patterns.FieldParserConstants;
-import net.jarlehansen.proto2javame.io.protoinput.patterns.MessageParserConstants;
-import net.jarlehansen.proto2javame.io.protoinput.patterns.OptionParserConstants;
+
+import content.domain.proto.ProtoFileInput;
+import content.io.exception.ProtoFileValidationException;
+import content.io.protoinput.ProtoParser;
+import content.io.protoinput.enums.EnumParser;
+import content.io.protoinput.enums.EnumValueParser;
+import content.io.protoinput.fields.FieldParser;
+import content.io.protoinput.message.MessageParser;
+import content.io.protoinput.options.OptionParser;
+import content.io.protoinput.patterns.EnumParserConstants;
+import content.io.protoinput.patterns.FieldParserConstants;
+import content.io.protoinput.patterns.MessageParserConstants;
+import content.io.protoinput.patterns.OptionParserConstants;
+
+import java.util.regex.Pattern;
 
 public class ProtoParserFactoryImpl implements ProtoParserFactory {
     static final ProtoParser NULL_PARSER = new ProtoParser() {
@@ -33,13 +38,12 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
     private boolean hasEnumValue = false;
     private boolean hasEnumEnd = false;
 
-    @Inject
-    public ProtoParserFactoryImpl(@Named("EnumParser") ProtoParser enumParser, @Named("EnumValueParser") ProtoParser enumValueParser, @Named("FieldParser") ProtoParser fieldParser, @Named("MessageParser") ProtoParser messageParser, @Named("OptionParser") ProtoParser optionParser) {
-        this.enumParser = enumParser;
-        this.enumValueParser = enumValueParser;
-        this.fieldParser = fieldParser;
-        this.messageParser = messageParser;
-        this.optionParser = optionParser;
+    public ProtoParserFactoryImpl() {
+        this.enumParser = new EnumParser();
+        this.enumValueParser = new EnumValueParser();
+        this.fieldParser = new FieldParser();
+        this.messageParser = new MessageParser();
+        this.optionParser = new OptionParser();
     }
 
     public ProtoParser getProtoParser(String line) {
@@ -138,7 +142,7 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
     private boolean matchesMessageFieldPattern(String line) {
         boolean pattern;
         if (this.hasMessageStart && !this.hasMessageEnd) {
-            pattern = FieldParserConstants.PATTERN_FIELD.matcher(line).matches();
+            pattern = Pattern.compile("[\\s]*(required|optional|repeated)[\\s]++[\\w0-9]++[\\s]++[\\w0-9]++[\\s]*[=]{1}[\\s]*[0-9]++[;]{1}$").matcher(line).matches();
             if (!this.hasFields) {
                 this.hasFields = pattern;
             }

@@ -1,6 +1,7 @@
 package content.domain.proto;
 
-import net.jarlehansen.proto2javame.domain.proto.DataType;
+
+import content.domain.metadata.DataType;
 
 public class CustomType implements DataType {
     private final String implementationType;

@@ -1,7 +1,8 @@
 package content.businnes.sourcebuilder;
 
-import net.jarlehansen.proto2javame.domain.java.JavaFileOutput;
-import net.jarlehansen.proto2javame.domain.proto.ProtoFileInput;
+
+import content.domain.java.JavaFileOutput;
+import content.domain.proto.ProtoFileInput;
 
 import java.util.List;
 

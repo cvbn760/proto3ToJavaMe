@@ -1,15 +1,16 @@
 package content.businnes.generator;
 
 
-import com.google.inject.Inject;
+
 import content.businnes.generator.factory.MetaDataFactory;
 import content.businnes.sourcebuilder.JavaSourceCodeBuilder;
 import content.domain.java.JavaFileOutput;
 import content.domain.metadata.InputMetaData;
 import content.domain.proto.ProtoFileInput;
 import content.io.protoinput.ProtoObjectBuilder;
+import content.io.protoinput.ProtoObjectBuilderImpl;
 import content.io.sourceoutput.SourceFileWriter;
-import net.jarlehansen.proto2javame.business.generator.CodeGenerator;
+
 
 import java.util.List;
 
@@ -18,9 +19,9 @@ public final class CodeGeneratorImpl implements CodeGenerator {
     private final JavaSourceCodeBuilder javaSourceCodeBuilder;
     private final SourceFileWriter sourceFileWriter;
 
-    @Inject
+//    @Inject
     public CodeGeneratorImpl(ProtoObjectBuilder protoObjectBuilder, JavaSourceCodeBuilder javaSourceCodeBuilder, SourceFileWriter sourceFileWriter) {
-        this.protoObjectBuilder = protoObjectBuilder;
+        this.protoObjectBuilder = new ProtoObjectBuilderImpl();
         this.javaSourceCodeBuilder = javaSourceCodeBuilder;
         this.sourceFileWriter = sourceFileWriter;
     }

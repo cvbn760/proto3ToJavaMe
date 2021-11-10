@@ -1,17 +1,16 @@
 package content.domain.proto;
 
-import net.jarlehansen.proto2javame.domain.proto.EnumData;
-import net.jarlehansen.proto2javame.domain.proto.FieldData;
-import net.jarlehansen.proto2javame.io.exception.ProtoFileValidationException;
+
+import content.io.exception.ProtoFileValidationException;
 
 import java.util.*;
 
 public class ProtoFileInput {
-    private final List<net.jarlehansen.proto2javame.domain.proto.FieldData> variables = new ArrayList();
-    private final Map<String, net.jarlehansen.proto2javame.domain.proto.EnumData> enums = new HashMap();
+    private final List<FieldData> variables = new ArrayList();
+    private final Map<String, EnumData> enums = new HashMap();
     private String protoClassName;
     private String packageName = "";
-    private net.jarlehansen.proto2javame.domain.proto.EnumData currentEnum = null;
+    private EnumData currentEnum = null;
 
     public ProtoFileInput() {
     }
@@ -32,12 +31,12 @@ public class ProtoFileInput {
         this.protoClassName = protoClassName;
     }
 
-    public void addFieldData(net.jarlehansen.proto2javame.domain.proto.FieldData messageData) {
+    public void addFieldData(FieldData messageData) {
         boolean duplicate = false;
         Iterator i$ = this.variables.iterator();
 
         while (i$.hasNext()) {
-            net.jarlehansen.proto2javame.domain.proto.FieldData fieldData = (net.jarlehansen.proto2javame.domain.proto.FieldData) i$.next();
+            FieldData fieldData = (FieldData) i$.next();
             if (fieldData.getId() == messageData.getId()) {
                 duplicate = true;
                 break;
@@ -57,7 +56,7 @@ public class ProtoFileInput {
 
     public void setEnumIfAbsent(String enumName) {
         if (!this.enums.containsKey(enumName)) {
-            net.jarlehansen.proto2javame.domain.proto.EnumData enumData = new net.jarlehansen.proto2javame.domain.proto.EnumData();
+            EnumData enumData = new EnumData();
             enumData.setName(enumName);
             this.enums.put(enumName, enumData);
             this.currentEnum = enumData;
@@ -70,11 +69,11 @@ public class ProtoFileInput {
         this.enums.put(this.currentEnum.getName(), this.currentEnum);
     }
 
-    public net.jarlehansen.proto2javame.domain.proto.EnumData getEnumData(String enumName) {
+    public EnumData getEnumData(String enumName) {
         return this.enums.get(enumName);
     }
 
-    public net.jarlehansen.proto2javame.domain.proto.EnumData getCurrentEnum() {
+    public EnumData getCurrentEnum() {
         return this.currentEnum;
     }
 

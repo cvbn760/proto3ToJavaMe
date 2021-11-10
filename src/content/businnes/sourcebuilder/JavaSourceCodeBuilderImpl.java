@@ -1,15 +1,20 @@
 package content.businnes.sourcebuilder;
 
-import com.google.inject.Inject;
-import net.jarlehansen.proto2javame.business.sourcebuilder.JavaSourceCodeBuilder;
-import net.jarlehansen.proto2javame.business.sourcebuilder.builder.InternalClassBuilder;
-import net.jarlehansen.proto2javame.business.sourcebuilder.enums.EnumsBuilder;
-import net.jarlehansen.proto2javame.business.sourcebuilder.instancemethods.InstanceMethodsBuilder;
-import net.jarlehansen.proto2javame.business.sourcebuilder.main.MainClassBuilder;
-import net.jarlehansen.proto2javame.business.sourcebuilder.publicmethods.PublicMethodsBuilder;
-import net.jarlehansen.proto2javame.business.sourcebuilder.staticmethods.StaticMethodsBuilder;
-import net.jarlehansen.proto2javame.domain.java.JavaFileOutput;
-import net.jarlehansen.proto2javame.domain.proto.ProtoFileInput;
+import content.businnes.sourcebuilder.builder.InternalClassBuilder;
+import content.businnes.sourcebuilder.builder.InternalClassBuilderImpl;
+import content.businnes.sourcebuilder.enums.EnumsBuilder;
+import content.businnes.sourcebuilder.enums.EnumsBuilderImpl;
+import content.businnes.sourcebuilder.instancemethods.InstanceMethodsBuilder;
+import content.businnes.sourcebuilder.instancemethods.InstanceMethodsBuilderImpl;
+import content.businnes.sourcebuilder.main.MainClassBuilder;
+import content.businnes.sourcebuilder.main.MainClassBuilderImpl;
+import content.businnes.sourcebuilder.publicmethods.PublicMethodsBuilder;
+import content.businnes.sourcebuilder.publicmethods.PublicMethodsBuilderImpl;
+import content.businnes.sourcebuilder.staticmethods.StaticMethodsBuilder;
+import content.businnes.sourcebuilder.staticmethods.StaticMethodsBuilderImpl;
+import content.domain.java.JavaFileOutput;
+import content.domain.proto.ProtoFileInput;
+
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,14 +28,14 @@ public final class JavaSourceCodeBuilderImpl implements JavaSourceCodeBuilder {
     private final PublicMethodsBuilder publicMethodsBuilder;
     private final StaticMethodsBuilder staticMethodsBuilder;
 
-    @Inject
+
     public JavaSourceCodeBuilderImpl(InternalClassBuilder internalClassBuilder, MainClassBuilder mainClassBuilder, EnumsBuilder enumsBuilder, InstanceMethodsBuilder privateMethodsBuilder, PublicMethodsBuilder publicMethodsBuilder, StaticMethodsBuilder staticMethodsBuilder) {
-        this.internalClassBuilder = internalClassBuilder;
-        this.mainClassBuilder = mainClassBuilder;
-        this.enumsBuilder = enumsBuilder;
-        this.privateMethodsBuilder = privateMethodsBuilder;
-        this.publicMethodsBuilder = publicMethodsBuilder;
-        this.staticMethodsBuilder = staticMethodsBuilder;
+        this.internalClassBuilder = new InternalClassBuilderImpl();
+        this.mainClassBuilder = new MainClassBuilderImpl();
+        this.enumsBuilder = new EnumsBuilderImpl();
+        this.privateMethodsBuilder = new InstanceMethodsBuilderImpl();
+        this.publicMethodsBuilder = new PublicMethodsBuilderImpl();
+        this.staticMethodsBuilder = new StaticMethodsBuilderImpl();
     }
 
     public List<JavaFileOutput> createJavaSourceCode(List<ProtoFileInput> protoInputList) {

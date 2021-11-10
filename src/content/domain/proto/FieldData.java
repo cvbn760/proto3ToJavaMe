@@ -1,8 +1,6 @@
 package content.domain.proto;
 
-import net.jarlehansen.proto2javame.domain.proto.DataType;
-import net.jarlehansen.proto2javame.domain.proto.ListImplementation;
-import net.jarlehansen.proto2javame.domain.proto.ValidScopes;
+import content.domain.metadata.DataType;
 
 public class FieldData {
     private int id;

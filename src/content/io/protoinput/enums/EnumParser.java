@@ -1,8 +1,8 @@
 package content.io.protoinput.enums;
 
 
-import net.jarlehansen.proto2javame.domain.proto.ProtoFileInput;
-import net.jarlehansen.proto2javame.io.protoinput.AbstractProtoParser;
+import content.domain.proto.ProtoFileInput;
+import content.io.protoinput.AbstractProtoParser;
 
 public class EnumParser extends AbstractProtoParser {
     public EnumParser() {

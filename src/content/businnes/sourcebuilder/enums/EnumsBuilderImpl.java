@@ -1,9 +1,8 @@
 package content.businnes.sourcebuilder.enums;
 
-import net.jarlehansen.proto2javame.business.sourcebuilder.enums.EnumsBuilder;
-import net.jarlehansen.proto2javame.business.sourcebuilder.resource.ResourceFormatUtil;
-import net.jarlehansen.proto2javame.domain.proto.EnumData;
-import net.jarlehansen.proto2javame.domain.proto.ProtoFileInput;
+import content.businnes.sourcebuilder.resource.ResourceFormatUtil;
+import content.domain.proto.EnumData;
+import content.domain.proto.ProtoFileInput;
 
 import java.util.Collection;
 import java.util.Iterator;

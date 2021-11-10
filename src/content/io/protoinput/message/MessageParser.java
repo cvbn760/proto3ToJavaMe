@@ -1,7 +1,7 @@
 package content.io.protoinput.message;
 
-import net.jarlehansen.proto2javame.domain.proto.ProtoFileInput;
-import net.jarlehansen.proto2javame.io.protoinput.AbstractProtoParser;
+import content.domain.proto.ProtoFileInput;
+import content.io.protoinput.AbstractProtoParser;
 
 public final class MessageParser extends AbstractProtoParser {
     public MessageParser() {

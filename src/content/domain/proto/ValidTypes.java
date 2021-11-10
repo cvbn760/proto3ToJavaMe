@@ -1,6 +1,6 @@
 package content.domain.proto;
 
-import net.jarlehansen.proto2javame.domain.proto.DataType;
+import content.domain.metadata.DataType;
 
 public enum ValidTypes implements DataType {
     DOUBLE("double", "double", "DATA_TYPE_DOUBLE", true, "Double"),

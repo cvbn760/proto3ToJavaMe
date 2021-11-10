@@ -1,10 +1,10 @@
 package content.io.protoinput;
 
-import com.google.inject.Inject;
 import content.domain.proto.FieldData;
 import content.domain.proto.ProtoFileInput;
 import content.io.exception.ProtoFileValidationException;
 import content.io.protoinput.factory.ProtoParserFactory;
+import content.io.protoinput.factory.ProtoParserFactoryImpl;
 import content.io.protoinput.util.ProtoTagUtil;
 
 import java.io.BufferedReader;
@@ -23,9 +23,8 @@ public final class ProtoObjectBuilderImpl implements ProtoObjectBuilder {
     private ProtoFileInput currentProtoInput = new ProtoFileInput();
     private String commonClassPackage = null;
 
-    @Inject
-    public ProtoObjectBuilderImpl(ProtoParserFactory protoParserFactory) {
-        this.protoParserFactory = protoParserFactory;
+    public ProtoObjectBuilderImpl() {
+        this.protoParserFactory = new ProtoParserFactoryImpl();
     }
 
     public List<ProtoFileInput> validateAndSaveProtoData(String protoLocation) {

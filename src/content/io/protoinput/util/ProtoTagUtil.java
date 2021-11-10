@@ -1,6 +1,7 @@
 package content.io.protoinput.util;
 
-import net.jarlehansen.proto2javame.io.exception.ProtoFileValidationException;
+
+import content.io.exception.ProtoFileValidationException;
 
 public enum ProtoTagUtil {
     private static final String PROTO_FILE = ".proto";
