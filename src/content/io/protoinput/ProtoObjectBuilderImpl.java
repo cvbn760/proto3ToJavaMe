@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public final class ProtoObjectBuilderImpl implements ProtoObjectBuilder {
     private final ProtoParserFactory protoParserFactory;
@@ -34,7 +35,16 @@ public final class ProtoObjectBuilderImpl implements ProtoObjectBuilder {
         try {
             reader = new BufferedReader(new FileReader(protoLocation));
 
+            /**
+             * Читается очередная строка
+             * (крашится при переносе открывающей фигурной скобки в начале описания сообщения)
+             */
             for (String line = reader.readLine(); line != null; ++this.lineNumber) {
+                line = noOpeningAtTheBegining(line);
+
+                if (hasOpen(line)){
+                    line = "//" + line;
+                }
                 line = this.removeComment(line);
                 this.parseLine(line);
                 line = reader.readLine();
@@ -61,6 +71,30 @@ public final class ProtoObjectBuilderImpl implements ProtoObjectBuilder {
             this.validateFieldIds();
             return this.protoInputList;
         }
+    }
+
+    private String noOpeningAtTheBegining(String line){
+        boolean result;
+        // Строка является началом описания сообщения или перечисления?
+        result = Pattern.compile(".*(message|enum).*").matcher(line).matches();
+        if (result){
+            // Есть ли в этой строке открывающая скобка \s*{\s*
+            result = Pattern.compile("\\s*\\{\\s*").matcher(line).matches();
+            if (!result){
+                // Если нет, то добавить
+                line = line + " {";
+                return line;
+            }
+            return line;
+        }
+        return line;
+    }
+
+    /**
+     * Содержит ли строка пустую открывающую скобку и больше ничего
+     */
+    private boolean hasOpen(String line){
+        return  Pattern.compile("\\s*\\{\\s*").matcher(line).matches();
     }
 
     private void validateFieldIds() {
