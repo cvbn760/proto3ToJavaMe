@@ -44,6 +44,7 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
 
     public ProtoParser getProtoParser(String line) {
         ProtoParser protoParser = NULL_PARSER;
+        line = giveMeTheNormalLine(line);
 
         /**
          * Пока просто определяет требуется ли упаковка
@@ -51,7 +52,7 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
          */
         if(matchesFieldPackage(line)){
             if (matchesFieldPackage(line)){
-                System.out.println("Требуется упаковка >>>>> " + line);
+//                System.out.println("Требуется упаковка >>>>> " + line);
                 line = line.replaceAll("\\s*\\[packed\\s*=\\s*true\\]\\s*", "");
             }
         }
@@ -65,21 +66,25 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
             if (!fieldHasType(line)){
                 line = "optional " + line;
             }
-            System.out.println(">>>> " + line);
+//            System.out.println(">>>> " + line);
             // Указан ли тип поля
         }
 
         if (!this.matchesPackagePattern(line)) {
             if (this.matchesJavaPackagePattern(line)) {
                 protoParser = this.optionParser;
-            } else if (!this.matchesJavaOuterClassnamePattern(line)) {
+            }
+
+            // Проверяет указан ли в строке тип генерации java класса
+            else if (this.matchesJavaOptimizeFor(line)){
+                // пока ничего не делает
+            }
+
+
+            else if (!this.matchesJavaOuterClassnamePattern(line)) {
                 if (this.matchesMessageStartPattern(line)) {
                     protoParser = this.messageParser;
                 }
-                else if (this.matchesMessageFieldPattern(line)) {
-                    protoParser = this.fieldParser;
-                }
-
                 else if (this.matchesEnumStartPattern(line)) {
                     protoParser = this.enumParser;
                 } else if (this.matchesEnumValuePattern(line)) {
@@ -93,6 +98,22 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
                     // Запись о синтаксисе
                 }
 
+//                if (!fieldHasType(line)){
+//                    line = "optional " + line;
+//                }
+                // Если прошел предидущие условия и не был пойман, то это одно из полей proto3 без пометки "optional"
+                else if (this.matchesMessageFieldPattern(line)) {
+                    protoParser = this.fieldParser;
+                }
+                else if (!fieldHasType(line)){
+                    line = "optional " + line;
+                    if (this.matchesMessageFieldPattern(line)) {
+                        protoParser = this.fieldParser;
+                    }
+                    else {
+                        line = line.replaceAll("\\s*optional\\s*", "");
+                    }
+                }
 
                 else if (line.trim().length() > 0) {
                     throw new ProtoFileValidationException("The .proto-file is invalid, content: " + line);
@@ -133,6 +154,20 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
         return retValue;
     }
 
+    /**
+     * Приводит строку к нормальному виду
+     * @param line возвращает строку, понятную для генератора
+     */
+    private String giveMeTheNormalLine(String line){
+//        System.out.println("old line: " + line);
+        line = line.replaceAll("[//].*", ""); // Убрать комментарии в строке
+        line = line.replaceAll("\\s*=\\s*", " = "); // По 1 пробелу, до и после знака "="
+        line = line.replaceAll("\\s*;\\s*", ";");
+        line = line.trim(); // Убрать пробелы с результирующей строки
+//        System.out.println("new line: " + line);
+        return line;
+    }
+
     private boolean matchesPackagePattern(String line) {
         return Pattern.compile("(package[\\s]++)(.*)(;{1}$)").matcher(line).matches();
     }
@@ -170,6 +205,20 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
      */
     private boolean matchesProtoSyntax(String line){
         String regExp = "^\\s*syntax\\s*=\\s*\"proto[2,3]\"\\s*;";
+        boolean pattern = Pattern.compile(regExp).matcher(line).matches();
+        if (pattern){
+            /*
+            Пока просто определяет
+             */
+        }
+        return pattern;
+    }
+
+    /**
+     * Проверяет указан ли в строке тип генерации java класса
+     */
+    private boolean matchesJavaOptimizeFor(String line){
+        String regExp = "^.*option.*optimize_for.*$";
         boolean pattern = Pattern.compile(regExp).matcher(line).matches();
         if (pattern){
             /*
