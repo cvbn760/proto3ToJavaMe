@@ -1,12 +1,16 @@
 
 option java_outer_classname = "UserSerializer";
 
-syntax = "proto3";
-
-message AccelData
+message UserSerializer
 {
-  int32 MaxValue = 1;                                     // максимальное достигнутое значение ускорения, mg
-  repeated uint32 Durations = 2 [packed=true];            // реальные длительности по порогам 1-4, мс
-  repeated uint32 TresholdDurations = 3 [packed=true];    // значения порогов длительностей 1-4, мс
-  repeated int32 TresholdValues = 4 [packed=true];        // значения порогов ускорений 1-4, mg
+
+  required string firstName = 1;
+  required string lastName = 2;
+  repeated uint32 age = 3;
+  required int64 telNumber = 4;
+  required float weight = 5;
+  required float height = 6;
+  required string password = 7;
+
+  repeated string roles = 8;
 }

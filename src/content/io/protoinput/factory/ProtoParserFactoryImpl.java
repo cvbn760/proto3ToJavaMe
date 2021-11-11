@@ -44,7 +44,6 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
 
     public ProtoParser getProtoParser(String line) {
         ProtoParser protoParser = NULL_PARSER;
-        line = giveMeTheNormalLine(line);
 
         /**
          * Пока просто определяет требуется ли упаковка
@@ -154,19 +153,6 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
         return retValue;
     }
 
-    /**
-     * Приводит строку к нормальному виду
-     * @param line возвращает строку, понятную для генератора
-     */
-    private String giveMeTheNormalLine(String line){
-//        System.out.println("old line: " + line);
-        line = line.replaceAll("[//].*", ""); // Убрать комментарии в строке
-        line = line.replaceAll("\\s*=\\s*", " = "); // По 1 пробелу, до и после знака "="
-        line = line.replaceAll("\\s*;\\s*", ";");
-        line = line.trim(); // Убрать пробелы с результирующей строки
-//        System.out.println("new line: " + line);
-        return line;
-    }
 
     private boolean matchesPackagePattern(String line) {
         return Pattern.compile("(package[\\s]++)(.*)(;{1}$)").matcher(line).matches();

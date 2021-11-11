@@ -40,12 +40,13 @@ public final class ProtoObjectBuilderImpl implements ProtoObjectBuilder {
              * (крашится при переносе открывающей фигурной скобки в начале описания сообщения)
              */
             for (String line = reader.readLine(); line != null; ++this.lineNumber) {
+                line = giveMeTheNormalLine(line);
                 line = noOpeningAtTheBegining(line);
 
                 if (hasOpen(line)){
                     line = "//" + line;
                 }
-                line = this.removeComment(line);
+       //         line = this.removeComment(line);
                 this.parseLine(line);
                 line = reader.readLine();
             }
@@ -73,14 +74,30 @@ public final class ProtoObjectBuilderImpl implements ProtoObjectBuilder {
         }
     }
 
+    /**
+     * Приводит строку к нормальному виду
+     * @param line возвращает строку, понятную для генератора
+     */
+    private String giveMeTheNormalLine(String line){
+//        System.out.println("old line: " + line);
+        line = line.replaceAll("\\{", " { ");
+        line = line.replaceAll("\\}", " } ");
+        line = line.replaceAll("[//].*", "");       // Убрать комментарии в строке
+        line = line.replaceAll("\\s*=\\s*", " = "); // По 1 пробелу, до и после знака "="
+        line = line.replaceAll("\\s*;\\s*", ";");
+        line = line.replaceAll("\\s+", " ");
+        line = line.trim();                               // Убрать пробелы с результирующей строки
+//        System.out.println("new line: " + line);
+        return line;
+    }
+
     private String noOpeningAtTheBegining(String line){
         boolean result;
         // Строка является началом описания сообщения или перечисления?
-        result = Pattern.compile(".*(message|enum).*").matcher(line).matches();
+        result = Pattern.compile("^.*(message|enum).*$").matcher(line).matches();
         if (result){
             // Есть ли в этой строке открывающая скобка \s*{\s*
-            result = Pattern.compile("\\s*\\{\\s*").matcher(line).matches();
-            if (!result){
+            if (!Pattern.compile("[^{]*\\{[^{]*").matcher(line).matches()){
                 // Если нет, то добавить
                 line = line + " {";
                 return line;
