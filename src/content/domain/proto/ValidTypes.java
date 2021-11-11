@@ -3,11 +3,18 @@ package content.domain.proto;
 import content.domain.metadata.DataType;
 
 public enum ValidTypes implements DataType {
-    DOUBLE("double", "double", "DATA_TYPE_DOUBLE", true, "Double"),
-    FLOAT("float", "float", "DATA_TYPE_FLOAT", true, "Float"),
-    INT32("int32", "int", "DATA_TYPE_INT", true, "Integer"),
-    INT64("int64", "long", "DATA_TYPE_LONG", true, "Long"),
+    DOUBLE("double", "double", "DATA_TYPE_DOUBLE", true, "Double"), // +
+    FLOAT("float", "float", "DATA_TYPE_FLOAT", true, "Float"), // +
+    INT32("int32", "int", "DATA_TYPE_INT", true, "Integer"), // +
+    INT64("int64", "long", "DATA_TYPE_LONG", true, "Long"), // +
     UINT32("uint32", "long", "DATA_TYPE_LONG", true, "Long"), // [0,4294967295]
+    // uint64 -
+    // sint32 -
+    // sint64 -
+    // fixed32 -
+    // fixed64 -
+    // sfixed32 -
+    // sfixed64 - 
     BOOL("bool", "boolean", "DATA_TYPE_BOOLEAN", true, "Boolean"),
     STRING("string", "String", "DATA_TYPE_STRING", false),
     ENUM("enum", "enum", "DATA_TYPE_ENUM", true, "Integer"),
