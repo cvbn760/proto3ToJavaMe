@@ -1,4 +1,4 @@
-package content.itelma;
+package content.com.itelma.proto3;
 
 public class Log {
     private static final String MARK = "";

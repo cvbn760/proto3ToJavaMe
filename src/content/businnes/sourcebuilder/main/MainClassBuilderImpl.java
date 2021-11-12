@@ -18,13 +18,13 @@ public final class MainClassBuilderImpl implements MainClassBuilder {
 
     public StringBuilder createMainClass(String className, ProtoFileInput protoInput) {
         StringBuilder builder = new StringBuilder();
-        builder.append(this.createPackage(protoInput));
-        builder.append(this.createImports());
-        builder.append(this.createClassInitialization(className));
-        builder.append(this.createStaticUnknownTagHandlerInitialization());
-        builder.append(this.createFields(protoInput));
-        builder.append(this.createNewBuilderMethod());
-        builder.append(this.createConstructor(className, protoInput));
+        builder.append(this.createPackage(protoInput)); // Добавляет пакет для класса
+        builder.append(this.createImports());  // Добавляются необходимые импорты
+        builder.append(this.createClassInitialization(className)); // Название класса с расширениями и реализациями
+        builder.append(this.createStaticUnknownTagHandlerInitialization()); // Добавляет DefaultUnknownTagHandlerImpl ?????????
+        builder.append(this.createFields(protoInput)); // Добавляет объявление полей
+        builder.append(this.createNewBuilderMethod());  // Добавляет метод, который возвращает новый билдер
+        builder.append(this.createConstructor(className, protoInput)); // Добавляет конструктор через билдер
         return builder;
     }
 

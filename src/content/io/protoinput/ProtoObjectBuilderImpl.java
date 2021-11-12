@@ -61,7 +61,6 @@ public final class ProtoObjectBuilderImpl implements ProtoObjectBuilder {
                 }
             } catch (IOException var11) {
             }
-
         }
 
         if (!this.protoParserFactory.getHasMessageEnd()) {

@@ -11,7 +11,6 @@ import content.io.protoinput.ProtoObjectBuilderImpl;
 import content.io.sourceoutput.SourceFileWriter;
 import content.io.sourceoutput.SourceFileWriterImpl;
 
-
 import java.util.List;
 
 public final class CodeGeneratorImpl implements CodeGenerator {

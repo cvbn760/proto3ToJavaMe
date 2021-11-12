@@ -17,12 +17,12 @@ public final class InternalClassBuilderImpl implements InternalClassBuilder {
 
     public StringBuilder createInternalClass(String className, ProtoFileInput protoInput) {
         StringBuilder builder = new StringBuilder();
-        builder.append(this.createClassInitialization());
+        builder.append(this.createClassInitialization()); // Добавляет название класса строителя
         builder.append(this.createClassFields(protoInput));
         builder.append(this.createConstructor());
         builder.append(this.createMethods(protoInput));
-        builder.append(this.createBuildMethods(className));
-        builder.append(this.createEnd());
+        builder.append(this.createBuildMethods(className)); // Добавляет метод build
+        builder.append(this.createEnd()); // Добавляет закрывающую фигурную скобку в конце
         return builder;
     }
 

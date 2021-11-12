@@ -1,16 +1,10 @@
 
-option java_outer_classname = "UserSerializer";
+syntax = "proto2";
+option java_package = "com.netty.protobuf";
+option java_outer_classname = "TeacherSerializer";
 
-message UserSerializer
-{
-
-  required string firstName = 1;
-  required string lastName = 2;
-  repeated uint32 age = 3;
-  required int64 telNumber = 4;
-  required float weight = 5;
-  required float height = 6;
-  required string password = 7;
-
-  repeated string roles = 8;
+message Teacher{
+  required int64 id = 1;
+  required int32 age =2;
+  required string name = 3;
 }

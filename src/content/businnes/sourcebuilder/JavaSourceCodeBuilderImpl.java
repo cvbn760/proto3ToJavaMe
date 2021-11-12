@@ -45,9 +45,9 @@ public final class JavaSourceCodeBuilderImpl implements JavaSourceCodeBuilder {
         while (i$.hasNext()) {
             ProtoFileInput protoInput = (ProtoFileInput) i$.next();
             JavaFileOutput javaClass = new JavaFileOutput(protoInput.getPackageName(), protoInput.getProtoClassName());
-            javaClass.setMainClass(this.mainClassBuilder.createMainClass(javaClass.getClassName(), protoInput));
+            javaClass.setMainClass(this.mainClassBuilder.createMainClass(javaClass.getClassName(), protoInput));  // MainClassBuilderImpl
             javaClass.setEnumClasses(this.enumsBuilder.createEnums(protoInput));
-            javaClass.setInternalClass(this.internalClassBuilder.createInternalClass(javaClass.getClassName(), protoInput));
+           javaClass.setInternalClass(this.internalClassBuilder.createInternalClass(javaClass.getClassName(), protoInput)); // Добавляет билдер для класса
             javaClass.setPrivateAndProtectedMethods(this.privateMethodsBuilder.createPrivateAndProtectedMethods(javaClass.getClassName(), protoInput));
             javaClass.setPublicMethods(this.publicMethodsBuilder.createPublicMethods(javaClass.getClassName(), protoInput));
             javaClass.setStaticMethods(this.staticMethodsBuilder.createStaticMethods(javaClass.getClassName()));
