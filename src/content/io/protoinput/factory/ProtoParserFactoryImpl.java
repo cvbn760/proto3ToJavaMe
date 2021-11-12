@@ -187,14 +187,16 @@ public class ProtoParserFactoryImpl implements ProtoParserFactory {
     }
 
     /**
-     * Проверяет является ли строка  указанием на тип синтаксиса
+     * Проверяет является ли строка указанием на тип синтаксиса
      */
     private boolean matchesProtoSyntax(String line){
         String regExp = "^\\s*syntax\\s*=\\s*\"proto[2,3]\"\\s*;";
         boolean pattern = Pattern.compile(regExp).matcher(line).matches();
         if (pattern){
-            /*
-            Пока просто определяет
+            /**
+             * В зависимости от типа синтаксиса
+             * Если синтаксис не указан или указан proto2, то генерируются классы совместимые с proto2
+             * Если указан синтаксис proto3, то генерируются классы совместимые с proto3
              */
         }
         return pattern;

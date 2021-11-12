@@ -1,7 +1,5 @@
 package content.businnes.generator;
 
-
-
 import content.businnes.generator.factory.MetaDataFactory;
 import content.businnes.sourcebuilder.JavaSourceCodeBuilder;
 import content.businnes.sourcebuilder.JavaSourceCodeBuilderImpl;

@@ -1,4 +1,4 @@
-package content;
+package content.domain;
 
 import content.businnes.generator.CodeGenerator;
 import content.businnes.generator.CodeGeneratorImpl;
@@ -20,8 +20,8 @@ public final class Proto2JavaMe {
 
     public static void main(String[] args) {
         System.out.println("Starting protobuf-javame code generation, " + new Date());
-        String[] strings = {"--java_out=D:/generate/",
-                "D:/TZ2_Proto_3/rep/proto3ToJavaMe/resources/proto/user.proto"};
+        String[] strings = {"--java_out=D:/TZ2_Proto_3/rep/proto3ToJavaMe/src/my_messages",
+                "D:/TZ2_Proto_3/rep/proto3ToJavaMe/resources/proto/LadaConnect.proto"};
 
 
         long start = System.currentTimeMillis();

@@ -79,7 +79,7 @@ public final class ProtoObjectBuilderImpl implements ProtoObjectBuilder {
      * @param line возвращает строку, понятную для генератора
      */
     private String giveMeTheNormalLine(String line){
-//        System.out.println("old line: " + line);
+        System.out.println("old line: " + line);
         line = line.replaceAll("\\{", " { ");
         line = line.replaceAll("\\}", " } ");
         line = line.replaceAll("[//].*", "");       // Убрать комментарии в строке
@@ -87,14 +87,14 @@ public final class ProtoObjectBuilderImpl implements ProtoObjectBuilder {
         line = line.replaceAll("\\s*;\\s*", ";");
         line = line.replaceAll("\\s+", " ");
         line = line.trim();                               // Убрать пробелы с результирующей строки
-//        System.out.println("new line: " + line);
+        System.out.println("new line: " + line);
         return line;
     }
 
     private String noOpeningAtTheBegining(String line){
         boolean result;
         // Строка является началом описания сообщения или перечисления?
-        result = Pattern.compile("^.*(message|enum).*$").matcher(line).matches();
+        result = Pattern.compile(".*\\s*(message|enum)\\s*.*").matcher(line).matches();
         if (result){
             // Есть ли в этой строке открывающая скобка \s*{\s*
             if (!Pattern.compile("[^{]*\\{[^{]*").matcher(line).matches()){

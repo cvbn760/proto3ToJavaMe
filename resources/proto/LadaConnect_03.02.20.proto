@@ -1,41 +1,39 @@
-﻿// оригинал файла
-// 22.10.21, добавлено: ClientParams, ClientResponse, ServerCommand,
-// изменено: IncomingMsg, OutcomingMsg
+﻿syntax = "proto3";
 
-syntax = "proto3";
+package Messaging;
 
 option optimize_for = SPEED;
 
 // информация о местоположении
 message LocationData
-{
-	// признак достоверности навигационных данных
+{	
+    // признак достоверности навигационных данных
 	enum GnssValid {
-		INVALID  = 0; // данные недостоверны
+	    INVALID  = 0; // данные недостоверны
 		GPS_FIX  = 1; // данные достоверны, обычная точность
 		DGPS_FIX = 2; // данные достоверны, повышенная точность
 		PRECISION= 3; // данные достоверны, наивысшая точность
 	}
-
-	fixed32 OccurrenceTime = 1;        // время UTC сбора координатных данных, unixtimestamp, ОБЯЗАТЕЛЬНО
-	sfixed32 Lat = 2;                  // широта * 10000000 и округленная до целого (например 55.123 будет представлена как 551230000), ОБЯЗАТЕЛЬНО
-	sfixed32 Lon = 3;                  // долгота * 10000000 и округленная до целого (например 35.123 будет представлена как 351230000), ОБЯЗАТЕЛЬНО
-	uint32 Speed = 4;                  // скорость, CAN, км/ч, ОБЯЗАТЕЛЬНО, PhysValue = RawValue * 0.01 ( 0..655.34 км/ч, шаг 0.01 км/ч, 0x00 - 0xEFFF, 0xFFFF - invalid value)
-	uint32 MaxSpeed = 5;               // максимальная скорость за период от предыдущей передачи LocationData, км/ч
-	int32 Altitude = 6;                // Высота над уровнем моря, м, ОБЯЗАТЕЛЬНО
-	uint32 GlonassGpsNum = 7;          // Число спутников GPS и ГЛОНАСС, ОБЯЗАТЕЛЬНО
-	uint32 Odometer = 8;               // счетчик пробега. Для корректной работы системы должен строго неубывать, PhysValue = RawValue ( 0..999 999 км, шаг 1 км, 0x00 - 0xF423F, 0xFFFFFF - invalid value)
+	
+    fixed32 OccurrenceTime = 1;        // время UTC сбора координатных данных, unixtimestamp, ОБЯЗАТЕЛЬНО
+    sfixed32 Lat = 2;                  // широта * 10000000 и округленная до целого (например 55.123 будет представлена как 551230000), ОБЯЗАТЕЛЬНО
+    sfixed32 Lon = 3;                  // долгота * 10000000 и округленная до целого (например 35.123 будет представлена как 351230000), ОБЯЗАТЕЛЬНО
+    uint32 Speed = 4;                  // скорость, CAN, км/ч, ОБЯЗАТЕЛЬНО, PhysValue = RawValue * 0.01 ( 0..655.34 км/ч, шаг 0.01 км/ч, 0x00 - 0xEFFF, 0xFFFF - invalid value)
+    uint32 MaxSpeed = 5;               // максимальная скорость за период от предыдущей передачи LocationData, км/ч
+    int32 Altitude = 6;                // Высота над уровнем моря, м, ОБЯЗАТЕЛЬНО
+    uint32 GlonassGpsNum = 7;          // Число спутников GPS и ГЛОНАСС, ОБЯЗАТЕЛЬНО
+    uint32 Odometer = 8;               // счетчик пробега. Для корректной работы системы должен строго неубывать, PhysValue = RawValue ( 0..999 999 км, шаг 1 км, 0x00 - 0xF423F, 0xFFFFFF - invalid value)
 	uint32 Dilution = 9;               // Dilution = (HDOP * 100), абсолютное значение
-	GnssValid GnssValidity = 10;
-	uint32 Course          = 11;       // курс (угол отклонения вектора движения от направления на север (0-360) )
+    GnssValid GnssValidity = 10;
+	uint32 Course          = 11;       // курс (угол отклонения вектора движения от направления на север (0-360) ) 
 }
 
 // ответ на проверку связи с сервером
 message HandshakeResponse
 {
 	enum HandShakeStatus {
-		OK = 0;
-		NOK_GENERAL_ERROR=1;			// неизвестная ошибка на IT-платформе
+		OK = 0;		
+	    NOK_GENERAL_ERROR=1;			// неизвестная ошибка на IT-платформе
 		NOK_SERVICE_ERROR=2;			// ошибка на службе
 		NOK_SERVICE_API_ERROR=3;		// ошибка на стороне API
 		NOK_DATABASE_ERROR=4;			// ошибка базы данных
@@ -48,34 +46,34 @@ message HandshakeResponse
 		NOK_TRAFFIC_LIMIT=11;			// only for activation-ready
 		NOK_SMS_LIMIT=12;				// only for activation-ready
 	}
-
+	
 	HandShakeStatus HandShakeState = 1;
 }
 
 // значения порогов для конфигурации  - массивы данных из 4-х значений: 1 2 3 4
 message AccelDataConfig
 {
-	repeated uint32 ATresholdDur = 1 [packed=true];       // значения порогов для резкого ускорения длительностей 1-4, мс
-	repeated int32 ATresholdVal = 2 [packed=true];        // значения порогов ускорений для резкого ускорения 1-4, mg
+    repeated uint32 ATresholdDur = 1 [packed=true];       // значения порогов для резкого ускорения длительностей 1-4, мс
+    repeated int32 ATresholdVal = 2 [packed=true];        // значения порогов ускорений для резкого ускорения 1-4, mg
 	repeated uint32 BTresholdDur = 3 [packed=true];       // значения порогов длительностей для резкого торможения 1-4, мс
-	repeated int32 BTresholdVal = 4 [packed=true];        // значения порогов ускорений для резкого торможения 1-4, mg
+    repeated int32 BTresholdVal = 4 [packed=true];        // значения порогов ускорений для резкого торможения 1-4, mg
 	repeated uint32 CRTresholdDur = 5 [packed=true];       // значения порогов длительностей для резкого поворота направо 1-4, мс
-	repeated int32 CRTresholdVal = 6 [packed=true];        // значения порогов ускорений для резкого поворота направо 1-4, mg
+    repeated int32 CRTresholdVal = 6 [packed=true];        // значения порогов ускорений для резкого поворота направо 1-4, mg
 	repeated uint32 CLTresholdDur = 7 [packed=true];       // значения порогов длительностей для резкого поворота налево 1-4, мс
-	repeated int32 CLTresholdVal = 8 [packed=true];        // значения порогов ускорений для резкого поворота налево 1-4, mg
+    repeated int32 CLTresholdVal = 8 [packed=true];        // значения порогов ускорений для резкого поворота налево 1-4, mg
 }
 
 // значения порогов для чтения  - массивы данных из 4-х значений: 1 2 3 4
 message AccelDataResponse
 {
-	repeated uint32 ATresholdDur = 1 [packed=true];       // значения порогов для резкого ускорения длительностей 1-4, мс
-	repeated int32 ATresholdVal = 2 [packed=true];        // значения порогов ускорений для резкого ускорения 1-4, mg
+    repeated uint32 ATresholdDur = 1 [packed=true];       // значения порогов для резкого ускорения длительностей 1-4, мс
+    repeated int32 ATresholdVal = 2 [packed=true];        // значения порогов ускорений для резкого ускорения 1-4, mg
 	repeated uint32 BTresholdDur = 3 [packed=true];       // значения порогов длительностей для резкого торможения 1-4, мс
-	repeated int32 BTresholdVal = 4 [packed=true];        // значения порогов ускорений для резкого торможения 1-4, mg
+    repeated int32 BTresholdVal = 4 [packed=true];        // значения порогов ускорений для резкого торможения 1-4, mg
 	repeated uint32 CRTresholdDur = 5 [packed=true];       // значения порогов длительностей для резкого поворота направо 1-4, мс
-	repeated int32 CRTresholdVal = 6 [packed=true];        // значения порогов ускорений для резкого поворота направо 1-4, mg
+    repeated int32 CRTresholdVal = 6 [packed=true];        // значения порогов ускорений для резкого поворота направо 1-4, mg
 	repeated uint32 CLTresholdDur = 7 [packed=true];       // значения порогов длительностей для резкого поворота налево 1-4, мс
-	repeated int32 CLTresholdVal = 8 [packed=true];        // значения порогов ускорений для резкого поворота налево 1-4, mg
+    repeated int32 CLTresholdVal = 8 [packed=true];        // значения порогов ускорений для резкого поворота налево 1-4, mg
 }
 
 // возвращает результат конфигурации порогов
@@ -92,10 +90,10 @@ message AccelDataConfigResponse
 // данные о резком маневре
 message AccelData
 {
-//	int32 MaxValue = 1;                                     // максимальное достигнутое значение ускорения, mg
-	repeated uint32 Durations = 2;            // реальные длительности по порогам 1-4, мс
-//	repeated uint32 TresholdDurations = 3;    // значения порогов длительностей 1-4, мс
-//	repeated int32 TresholdValues = 4;        // значения порогов ускорений 1-4, mg
+    int32 MaxValue = 1;                                     // максимальное достигнутое значение ускорения, mg
+    repeated uint32 Durations = 2 [packed=true];            // реальные длительности по порогам 1-4, мс
+    repeated uint32 TresholdDurations = 3 [packed=true];    // значения порогов длительностей 1-4, мс
+    repeated int32 TresholdValues = 4 [packed=true];        // значения порогов ускорений 1-4, mg
 }
 
 // версия ЭРА-ГЛОНАСС
@@ -121,14 +119,14 @@ message VehicleStatus
 		Sleeping=6;
 		Unavailable=7;
 	}
-
+	
 	// состояние CheckEngine
 	enum CheckEngineStatus{
 		OFF_CES=0;
 		ON_CES=1;
 		BLINK=2;
 		UNKNOWN=3;
-	}
+	}	
 
 	enum DippedBeamStatus {
 		OFF_DBS=0;
@@ -140,7 +138,7 @@ message VehicleStatus
 		ON_FDS=1;
 	}
 
-	EngineStatus EngineState = 1;
+	EngineStatus EngineState = 1;       
 	uint32 BatteryVoltage = 3;    // PhysValue = RawValue/10 (0..25.4 В, шаг 0.1 В, 0x00 - 0xFE, 0xFF - invalid value)
 	uint32 AllLockStatus = 4;     // 0x01 - driver door is open, 0x02 - pass door is open, 0x04 - rear door is open, 0x08 - trunk is open, 0x10 - hood is open, 0x20 - central lock is open, 0x40 - alarm is on (COMBI - multiple), 0x80 - alarm is in operation (COMBI - multiple), 0x100 - guarded (Lada Connect), 0x200 - guarded alarm (Lada Connect), 0x400 - guarded trunk/hood (Lada Connect)
 	sint32 OutsideTemp = 5;       // PhysValue = RawValue - 40 (-40°..+60°, шаг 1°С, 0xFF - invalid value)
@@ -152,60 +150,34 @@ message VehicleStatus
 	uint32 AverageFuelConsumption = 11; // PhysValue = RawValue ( 0..30 л/100 км., шаг 1 л, 0x00 - 0x1E, 0xFF - invalid value)
 	uint32 FuelConsumotionPerTrip = 12; // PhysValue = RawValue * 0.01 ( 0..999,99 л, шаг 0.01 л, 0xFFFFF - invalid value)
 	sint32 InVehicleTempCLIMM = 13;	  // PhysValue = RawValue - 40 (-40°..+60°, шаг 1°С, 0xFF - invalid value) 	
-	CheckEngineStatus CheckEngineState = 14;
+	CheckEngineStatus CheckEngineState = 14; 
 	uint32 AutorunEngineErrorStatus = 15;  // PhysValue = RawValue, значение берется с CAN-шины, работает аналогично EngineState (ECM_EngineRunSts), 
-	// 255 "Unknown" 64 "No error" 56 "Parking gear is not set" 55 "Engine overcool" 54 "Speed" 50 "Engine overheat" 49 "Vehicle battery low" 48 "Fuel level is low" 36 "Ignition is ON" 20 // "Neutral gear error" 19 "Neutral gear is not set" 18 "Pedals are pressed" 17 "HandBrake is not set" 16 "HandBrake error" 1 "DTC errors" 0 "General" ;
+										   // 255 "Unknown" 64 "No error" 56 "Parking gear is not set" 55 "Engine overcool" 54 "Speed" 50 "Engine overheat" 49 "Vehicle battery low" 48 "Fuel level is low" 36 "Ignition is ON" 20 // "Neutral gear error" 19 "Neutral gear is not set" 18 "Pedals are pressed" 17 "HandBrake is not set" 16 "HandBrake error" 1 "DTC errors" 0 "General" ;
 	uint32 AirTempAdj = 16; // положение ручки управления температурой воздуха в салоне 
 	DippedBeamStatus DippedBeamState = 17; // состояние ближнего света фар 			
 	FrontDefrostStatus FrontDefrostState = 18; // состояние реле обогрева лобового стекла									   
 }
 
-// Параметры БЭГа
-message ClientParams
-{
-	string  ParameterName  = 1;  // Имя параметра или
-	int32   ParameterId    = 2;  // ID параметра
-	string  StringValue    = 3;  // Текстовое значение параметра или
-	int32   IntValue       = 4;  // Числовое значение параметра
-}
-
-// Ответ БЭГа на команду
-message ClientResponse
-{
-	enum ResultCode
-	{
-		NO_ERROR        = 0;  // команда получена
-		UNKNOWN_CMD     = 1;  // неизвестная команда
-		PARSE_ERROR     = 2;  // ошибка парсинга команды
-		CMD_COMPLETE    = 4;  // команда выполнена
-		CMD_ERROR       = 5;  // ошибка выполнения команды
-	}
-
-	int32      CmdId        = 1; // содержит уникальный идентификатор полученной от сервера команды
-	ResultCode ResCode      = 2;
-	repeated   ClientParams CParams = 3;  // Опциональные параметры
-}
 
 // сообщение от блока к серверу
 message IncomingMsg
 {
-	enum MsgType
-	{
-		Unknown = 0;
+    enum MsgType
+    {
+        Unknown = 0;
 		ECUData = 1;               // данные от ECU
 		LocationData = 2;          // данные о местоположении
-		Acceleration = 3;          // произошло резкое ускорение
-		Braking = 4;               // произошло резкое торможение
-		CorneringRight = 5;        // произошел резкий поворот направо
-		CorneringLeft = 6;         // произошел резкий поворот налево
-		SmsRecieved = 7;           // получено смс
+        Acceleration = 3;          // произошло резкое ускорение
+        Braking = 4;               // произошло резкое торможение
+        CorneringRight = 5;        // произошел резкий поворот направо
+        CorneringLeft = 6;         // произошел резкий поворот налево
+        SmsRecieved = 7;           // получено смс
 		EraIdData = 8;			   // версия ЭРА-ГЛОНАСС		
 		AccelDataResponse = 9;	   // возврат порогов 
 		AccelDataConfigResponse = 10; // возврат результата конфигурации
-		HandshakeRequest = 11;     // запрос проверки связи с сервером
-		ClientResponse = 12;       // ответ на команду платформы	
-	}
-
+		HandshakeRequest = 11;     // запрос проверки связи с сервером		
+    }
+	
 	// описание состояния БЭГ: 0 - неизвестное, 1-основной (коммерческий), 2-ожидание, 3-аварийный, 4-самодиагностика, 5 - SOS (ERA-GLONASS)
 	enum TCUstatus {
 		UnknownStatus = 0;
@@ -223,7 +195,7 @@ message IncomingMsg
 		ROLLOVER=2;					// автоматический вызов ЭРА-ГЛОНАСС от переворота в результате ДТП
 	}
 
-	// описание состояний Замка зажигания (КЛ15)
+	// описнаие состояний Замка зажигания (КЛ15
 	enum IgnitionStatus {
 		OFF_IS=0;
 		ACC=1;
@@ -236,71 +208,49 @@ message IncomingMsg
 		ON_IAS=1;
 	}
 
-	bytes DeviceID = 1;            // идентификатор блока ICCID, каждая цифра - один ниббл, т.е. в каждом байте 2 цифры, ОБЯЗАТЕЛЬНО
+    bytes DeviceID = 1;            // идентификатор блока ICCID, каждая цифра - один ниббл, т.е. в каждом байте 2 цифры, ОБЯЗАТЕЛЬНО
 	uint64 SequenceNumber = 2;     // возрастающий идентификатор сообщения от блока, ОБЯЗАТЕЛЬНО
-	MsgType Type = 3;              // тип сообщения, ОБЯЗАТЕЛЬНО
-	fixed32 Time = 4;              // время UTC формирования сообщения на устройстве, unixtimestamp
-	uint64 Flags = 5;              // зарезервировано
+    MsgType Type = 3;              // тип сообщения, ОБЯЗАТЕЛЬНО
+    fixed32 Time = 4;              // время UTC формирования сообщения на устройстве, unixtimestamp
+    uint64 Flags = 5;              // зарезервировано 
 	uint64 FlagsHasValues = 6;     // зарезервировано
 	bytes ECUSpecificData = 7;     // массив данных от ECU (описан в документе Требования по Протокол обмена данных)
 	LocationData Location = 8;     // информация о местоположении
 	AccelData AccelData = 9;       // информация о превышении порогов ускорений. Передается при превышении установленных порогов на установленные длительности по времени
 	sint32 SignalStrength = 10;    // уровень сигнала сети сотовой связи, dBm 
-	IgnitionStatus IgnitionState = 11;
-	TCUstatus TCUstate = 12;
+	IgnitionStatus IgnitionState = 11;     
+	TCUstatus TCUstate = 12;		   	
 	VehicleStatus VehicleState = 13;
 	uint32 AccumVoltage = 14;       // уровень напряжения внутренней резервной батареи БЭГ
 	EraIdData EraId = 15;
 	IgnitionAStatus IgnitionAState = 16;
-	AccelDataResponse AccelerationResp = 17;
+	AccelDataResponse AccelerationResp = 17;   
 	AccelDataConfigResponse AccelDataConfigResp = 18;
 	SOSReasonStatus SOSReasonState = 19;
-	ClientResponse CResponse = 20;
-}
-
-//произвольная команда БЭГу
-message ServerCommand
-{
-	enum CommandAlias
-	{
-		UNKNOWN         = 0;
-		SET_PARAMS      = 1; // команда установки параметров БЭГа
-		GET_PARAMS		= 2; // команда чтения параметров БЭГа
-		START_LOGGING   = 3; // команда запуска логирования
-		STOP_LOGGING    = 4; // команда прекращения логирования
-		UPLOAD_LOG      = 5; // команда выгрузки лога на платформу ЛУВ
-	}
-
-	int32 CmdId = 1;    	// уникальный идентификатор команды
-	CommandAlias CmdAlias = 2;
-	int32  CmdParam = 3; 	// опциональный параметр команды
-	repeated ClientParams CParams = 4;// опциональные запрашиваемые или устанавливаемые параметры
 }
 
 // сообщение от сервера к блоку
 message OutcomingMsg
 {
-	enum MsgType
-	{
-		Unknown = 0;
+    enum MsgType
+    {
+        Unknown = 0;
 		ECUData = 1;               // данные для ECU
 		LocationRequest = 2;       // запрос данных о местоположении
 		EraIdRequest = 3; 		   // запрос данных о версии ЭРА-ГЛОНАСС
 		AccelDataRequest = 4; 	   // запрос данных о значениях порогов
 		AccelDataConfig = 5;	   // конфигурация порогов ускорений
 		HandshakeResponse = 6;     // ответ на проверку связи с сервером
-		ServerCommand = 7;         // команда для БЭГа
-	}
+    }
 
 	uint64 MessageID = 1;          // уникальный идентификатор сообщения от сервера. Сквозной для всех устройств, ОБЯЗАТЕЛЬНО 
-	MsgType Type = 2;              // тип сообщения, ОБЯЗАТЕЛЬНО
-	fixed32 Time = 3;              // время UTC формирования сообщения на сервере, unixtimestamp, ОБЯЗАТЕЛЬНО
-	uint64 Flags = 4;              // зарезервировано
+    MsgType Type = 2;              // тип сообщения, ОБЯЗАТЕЛЬНО
+    fixed32 Time = 3;              // время UTC формирования сообщения на сервере, unixtimestamp, ОБЯЗАТЕЛЬНО         
+    uint64 Flags = 4;              // зарезервировано  
 	uint64 FlagsHasValues = 5;	   // зарезервировано
 	bytes ECUSpecificData = 6;     // массив данных для ECU (описан в документе Требования по Протокол обмена данных)
 	bool IgnoreId = 7;             // игнорирование значения messageId. Необходимо для работы с утилитой.
 	AccelDataConfig AccelDataConf = 8;   // значения порогов 
 	HandshakeResponse HandshakeResp = 9;
-	ServerCommand ServCommand = 10;
 }
 

@@ -1,3 +1,4 @@
+// оригинал файла
 // 22.10.21, добавлено: ClientParams, ClientResponse, ServerCommand,
 // изменено: IncomingMsg, OutcomingMsg
 
@@ -8,7 +9,8 @@ package Messaging;
 option optimize_for = SPEED;
 
 // информация о местоположении
-message LocationData {
+message LocationData
+{
   // признак достоверности навигационных данных
   enum GnssValid {
     INVALID  = 0; // данные недостоверны
@@ -17,7 +19,7 @@ message LocationData {
     PRECISION= 3; // данные достоверны, наивысшая точность
   }
 
-  fixed32 OccurrenceTime = 1        ;        // время UTC сбора координатных данных, unixtimestamp, ОБЯЗАТЕЛЬНО
+  fixed32 OccurrenceTime = 1;        // время UTC сбора координатных данных, unixtimestamp, ОБЯЗАТЕЛЬНО
   sfixed32 Lat = 2;                  // широта * 10000000 и округленная до целого (например 55.123 будет представлена как 551230000), ОБЯЗАТЕЛЬНО
   sfixed32 Lon = 3;                  // долгота * 10000000 и округленная до целого (например 35.123 будет представлена как 351230000), ОБЯЗАТЕЛЬНО
   uint32 Speed = 4;                  // скорость, CAN, км/ч, ОБЯЗАТЕЛЬНО, PhysValue = RawValue * 0.01 ( 0..655.34 км/ч, шаг 0.01 км/ч, 0x00 - 0xEFFF, 0xFFFF - invalid value)
@@ -31,7 +33,8 @@ message LocationData {
 }
 
 // ответ на проверку связи с сервером
-message HandshakeResponse {
+message HandshakeResponse
+{
   enum HandShakeStatus {
     OK = 0;
     NOK_GENERAL_ERROR=1;			// неизвестная ошибка на IT-платформе
@@ -52,7 +55,8 @@ message HandshakeResponse {
 }
 
 // значения порогов для конфигурации  - массивы данных из 4-х значений: 1 2 3 4
-message AccelDataConfig {
+message AccelDataConfig
+{
   repeated uint32 ATresholdDur = 1 [packed=true];       // значения порогов для резкого ускорения длительностей 1-4, мс
   repeated int32 ATresholdVal = 2 [packed=true];        // значения порогов ускорений для резкого ускорения 1-4, mg
   repeated uint32 BTresholdDur = 3 [packed=true];       // значения порогов длительностей для резкого торможения 1-4, мс
@@ -64,7 +68,8 @@ message AccelDataConfig {
 }
 
 // значения порогов для чтения  - массивы данных из 4-х значений: 1 2 3 4
-message AccelDataResponse {
+message AccelDataResponse
+{
   repeated uint32 ATresholdDur = 1 [packed=true];       // значения порогов для резкого ускорения длительностей 1-4, мс
   repeated int32 ATresholdVal = 2 [packed=true];        // значения порогов ускорений для резкого ускорения 1-4, mg
   repeated uint32 BTresholdDur = 3 [packed=true];       // значения порогов длительностей для резкого торможения 1-4, мс
@@ -76,7 +81,8 @@ message AccelDataResponse {
 }
 
 // возвращает результат конфигурации порогов
-message AccelDataConfigResponse {
+message AccelDataConfigResponse
+{
   enum DataConfigResponse {
     SUCCESS = 0; // параметры заданы успешно
     FAIL_INVALID_DATA = 1;    // не удалось задать параметры из-за их некорректности
@@ -86,7 +92,8 @@ message AccelDataConfigResponse {
 }
 
 // данные о резком маневре
-message AccelData {
+message AccelData
+{
   int32 MaxValue = 1;                                     // максимальное достигнутое значение ускорения, mg
   repeated uint32 Durations = 2 [packed=true];            // реальные длительности по порогам 1-4, мс
   repeated uint32 TresholdDurations = 3 [packed=true];    // значения порогов длительностей 1-4, мс
@@ -94,91 +101,20 @@ message AccelData {
 }
 
 // версия ЭРА-ГЛОНАСС
-message EraIdData {
+message EraIdData
+{
   bytes IMEI = 1;            		// идентификатор IMEI, ОБЯЗАТЕЛЬНО
   bytes EraSoftVerXC = 2; 		// версия ПО ХС, ОБЯЗАТЕЛЬНО
   bytes EraSoftVerBoot = 3; 		// версия ПО загрузчика, ОБЯЗАТЕЛЬНО
   bytes EraSoftVerMidlet = 4; 	// версия ПО мидлета, ОБЯЗАТЕЛЬНО
 }
 
-// статусы и сигналы с автомобиля
-message VehicleStatus {
-  // состояние двигателя
-  enum EngineStatus{
-    OFF=0;
-    Stalled=1;
-    Cranking=2;
-    LimphomeRunning=3;
-    ReducedLoadRunning=4;
-    FullRunning=5;
-    Sleeping=6;
-    Unavailable=7;
-  }
-
-  // состояние CheckEngine
-  enum CheckEngineStatus {
-    OFF_CES=0;
-    ON_CES=1;
-    BLINK=2;
-    UNKNOWN=3;
-  }
-
-  enum DippedBeamStatus {
-    OFF_DBS=0;
-    ON_DBS=1;
-  }
-
-  enum FrontDefrostStatus {
-    OFF_FDS=0;
-    ON_FDS=1;
-  }
-
-  EngineStatus EngineState = 1;
-  uint32 BatteryVoltage = 3;    // PhysValue = RawValue/10 (0..25.4 В, шаг 0.1 В, 0x00 - 0xFE, 0xFF - invalid value)
-  uint32 AllLockStatus = 4;     // 0x01 - driver door is open, 0x02 - pass door is open, 0x04 - rear door is open, 0x08 - trunk is open, 0x10 - hood is open, 0x20 - central lock is open, 0x40 - alarm is on (COMBI - multiple), 0x80 - alarm is in operation (COMBI - multiple), 0x100 - guarded (Lada Connect), 0x200 - guarded alarm (Lada Connect), 0x400 - guarded trunk/hood (Lada Connect)
-  sint32 OutsideTemp = 5;       // PhysValue = RawValue - 40 (-40°..+60°, шаг 1°С, 0xFF - invalid value)
-  sint32 EngineCoolantTemp = 6; // PhysValue = RawValue - 40 (-40°..+214°, шаг 1°С, 0xFF - invalid value)
-  sint32 InVehicleTemp = 7;	  // PhysValue = RawValue - 40 (-40°..+60°, шаг 1°С, 0xFF - invalid value)
-  uint32 FuelLevel = 8;         // PhysValue = RawValue / 2 ( 0..45 л, шаг 0.5 л, 0xFF - invalid value)
-  uint32 HandBrakeStatus = 9;   // 1 - on, 0 - off, 3 - circuit error
-  uint32 BrakeFluidAlarmState = 10;       // 0x01 - normal level, 0x00 - low level
-  uint32 AverageFuelConsumption = 11; // PhysValue = RawValue ( 0..30 л/100 км., шаг 1 л, 0x00 - 0x1E, 0xFF - invalid value)
-  uint32 FuelConsumotionPerTrip = 12; // PhysValue = RawValue * 0.01 ( 0..999,99 л, шаг 0.01 л, 0xFFFFF - invalid value)
-  sint32 InVehicleTempCLIMM = 13;	  // PhysValue = RawValue - 40 (-40°..+60°, шаг 1°С, 0xFF - invalid value)
-  CheckEngineStatus CheckEngineState = 14;
-  uint32 AutorunEngineErrorStatus = 15;  // PhysValue = RawValue, значение берется с CAN-шины, работает аналогично EngineState (ECM_EngineRunSts),
-  // 255 "Unknown" 64 "No error" 56 "Parking gear is not set" 55 "Engine overcool" 54 "Speed" 50 "Engine overheat" 49 "Vehicle battery low" 48 "Fuel level is low" 36 "Ignition is ON" 20 // "Neutral gear error" 19 "Neutral gear is not set" 18 "Pedals are pressed" 17 "HandBrake is not set" 16 "HandBrake error" 1 "DTC errors" 0 "General" ;
-  uint32 AirTempAdj = 16; // положение ручки управления температурой воздуха в салоне
-  DippedBeamStatus DippedBeamState = 17; // состояние ближнего света фар
-  FrontDefrostStatus FrontDefrostState = 18; // состояние реле обогрева лобового стекла
-}
-
-// Параметры БЭГа
-message ClientParams {
-  string  ParameterName  = 1;  // Имя параметра или
-  int32   ParameterId    = 2;  // ID параметра
-  string  StringValue    = 3;  // Текстовое значение параметра или
-  int32   IntValue       = 4;  // Числовое значение параметра
-}
-
-// Ответ БЭГа на команду
-message ClientResponse {
-  enum ResultCode {
-    NO_ERROR        = 0;  // команда получена
-    UNKNOWN_CMD     = 1;  // неизвестная команда
-    PARSE_ERROR     = 2;  // ошибка парсинга команды
-    CMD_COMPLETE    = 4;  // команда выполнена
-    CMD_ERROR       = 5;  // ошибка выполнения команды
-  }
-
-  int32      CmdId        = 1; // содержит уникальный идентификатор полученной от сервера команды
-  ResultCode ResCode      = 2;
-  repeated   ClientParams CParams = 3;  // Опциональные параметры
-}
 
 // сообщение от блока к серверу
-message IncomingMsg {
-  enum MsgType {
+message IncomingMsg
+{
+  enum MsgType
+  {
     Unknown = 0;
     ECUData = 1;               // данные от ECU
     LocationData = 2;          // данные о местоположении
@@ -236,55 +172,14 @@ message IncomingMsg {
   sint32 SignalStrength = 10;    // уровень сигнала сети сотовой связи, dBm
   IgnitionStatus IgnitionState = 11;
   TCUstatus TCUstate = 12;
-  VehicleStatus VehicleState = 13;
   uint32 AccumVoltage = 14;       // уровень напряжения внутренней резервной батареи БЭГ
   EraIdData EraId = 15;
   IgnitionAStatus IgnitionAState = 16;
   AccelDataResponse AccelerationResp = 17;
   AccelDataConfigResponse AccelDataConfigResp = 18;
   SOSReasonStatus SOSReasonState = 19;
-  ClientResponse CResponse = 20;
 }
 
-//произвольная команда БЭГу
-message ServerCommand {
-  enum CommandAlias {
-    UNKNOWN         = 0;
-    SET_PARAMS      = 1; // команда установки параметров БЭГа
-    GET_PARAMS		= 2; // команда чтения параметров БЭГа
-    START_LOGGING   = 3; // команда запуска логирования
-    STOP_LOGGING    = 4; // команда прекращения логирования
-    UPLOAD_LOG      = 5; // команда выгрузки лога на платформу ЛУВ
-  }
 
-  int32 CmdId = 1;    	// уникальный идентификатор команды
-  CommandAlias CmdAlias = 2;
-  int32  CmdParam = 3; 	// опциональный параметр команды
-  repeated ClientParams CParams = 4;// опциональные запрашиваемые или устанавливаемые параметры
-}
 
-// сообщение от сервера к блоку
-message OutcomingMsg {
-  enum MsgType {
-    Unknown = 0;
-    ECUData = 1;               // данные для ECU
-    LocationRequest = 2;       // запрос данных о местоположении
-    EraIdRequest = 3; 		   // запрос данных о версии ЭРА-ГЛОНАСС
-    AccelDataRequest = 4; 	   // запрос данных о значениях порогов
-    AccelDataConfig = 5;	   // конфигурация порогов ускорений
-    HandshakeResponse = 6;     // ответ на проверку связи с сервером
-    ServerCommand = 7;         // команда для БЭГа
-  }
-
-  uint64 MessageID = 1;          // уникальный идентификатор сообщения от сервера. Сквозной для всех устройств, ОБЯЗАТЕЛЬНО
-  MsgType Type = 2;              // тип сообщения, ОБЯЗАТЕЛЬНО
-  fixed32 Time = 3;              // время UTC формирования сообщения на сервере, unixtimestamp, ОБЯЗАТЕЛЬНО
-  uint64 Flags = 4;              // зарезервировано
-  uint64 FlagsHasValues = 5;	   // зарезервировано
-  bytes ECUSpecificData = 6;     // массив данных для ECU (описан в документе Требования по Протокол обмена данных)
-  bool IgnoreId = 7;             // игнорирование значения messageId. Необходимо для работы с утилитой.
-  AccelDataConfig AccelDataConf = 8;   // значения порогов
-  HandshakeResponse HandshakeResp = 9;
-  ServerCommand ServCommand = 10;
-}
 
