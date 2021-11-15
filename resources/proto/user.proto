@@ -1,10 +1,9 @@
 
-syntax = "proto2";
-option java_package = "com.netty.protobuf";
-option java_outer_classname = "TeacherSerializer";
-
-message Teacher{
-  required int64 id = 1;
-  required int32 age =2;
-  required string name = 3;
+// Параметры БЭГа
+message ClientParams
+{
+  string  ParameterName  = 1;  // Имя параметра или
+  int32   ParameterId    = 2;  // ID параметра
+  string  StringValue    = 3;  // Текстовое значение параметра или
+  int32   IntValue       = 4;  // Числовое значение параметра
 }

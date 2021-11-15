@@ -1,11 +1,10 @@
-package content.com.itelma.proto3;
+package itelma;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Vector;
 
-// https://habrahabr.ru/post/225901/
-// https://github.com/addthis/stream-lib/blob/master/src/main/java/com/clearspring/analytics/util/Varint.java
-public class Serializer3 {
+public class Serializer2 {
 
     public static byte[] getInt32(int fieldNumber, int data) {
         return getType0_64(fieldNumber, data); // да, это не ошибка, 64
@@ -22,8 +21,7 @@ public class Serializer3 {
     }
 
     public static byte[] getUInt32(int fieldNumber, int data) {
-        if (data == 0) return new byte[0];
-        else return getType0_32(fieldNumber, data);
+        return getType0_32(fieldNumber, data);
     }
     public static byte[] getUInt32(int data) {
         return getVarint32(data);
@@ -98,91 +96,40 @@ public class Serializer3 {
         return get8Bytes(data);
     }
 
-    /**
-     * Одинаково для прото 2 и 3
-     */
     public static byte[] getDouble(int fieldNumber, double data) {
         return getType1(fieldNumber, Double.doubleToLongBits(data));
     }
-
-    /**
-     * Одинаково для прото 2 и 3
-     */
     public static byte[] getDouble(long data) {
         return get8Bytes(Double.doubleToLongBits(data));
     }
 
-    /**
-     * Одинаково для прото 2 и 3
-     */
     public static byte[] getString(int fieldNumber, String s) {
         if (s.length() == 0) return new byte[0];
         else return getNestedMessage(fieldNumber,s.getBytes());
     }
-
-    /**
-     * Одинаково для прото 2 и 3
-     */
     public static byte[] getString(String s) {
         if (s.length() == 0) return new byte[0];
         else return s.getBytes();
     }
 
-
-    /**
-     * Одинаково для прото 2 и 3
-     */
     public static byte[] getBytes(int fieldNumber, byte[] b) {
         if (b.length == 0) return new byte[0];
         else return getNestedMessage(fieldNumber, b);
     }
 
-
-    /**
-     * Различается
-     * */
-    /* Для полей repeated. ВАЖНО - не использовать для элементарных типов protobuf: varint, 32-bit, or 64-bit!
+    /* Использовать только для repeated PROTO2
+     * ВАЖНО: использовать обязательно с полями types varint, 32-bit, or 64-bit и также с полями с опцией [packed=true]
      * Vector v должен содержать не исходные данные, а массивы байт, полученные методами вида getSInt32(int i)!
      */
-    public static byte[] getRepeated(int fieldNumber, Vector v) {
-        byte type = 2;
-        byte[] result = new byte[0];
-        if (v.size() == 0) return result;
-        else {
-            try {
-                ByteArrayOutputStream bout = new ByteArrayOutputStream();
-                for(int i=0; i < v.size(); i++) {
-                    bout.write(getKey(fieldNumber, type));
-                    ByteArrayOutputStream bData = new ByteArrayOutputStream();
-                    bData.write((byte[]) v.elementAt(i));
-                    byte[] data = bData.toByteArray();
-                    bout.write(getVarint32(data.length));
-                    bout.write(data);
-                }
-                result = bout.toByteArray();
-            } catch (IOException e) {}
-            return result;
-        }
-    }
-
-    /**
-     * Различается
-     * */
-    /* ВАЖНО: использовать обязательно с полями types varint, 32-bit, or 64-bit и также с полями с опцией [packed=true]
-     * Vector v должен содержать не исходные данные, а массивы байт, полученные методами вида getSInt32(int i)!
-     */
-    public static byte[] getRepeatedPacked(int fieldNumber, Vector v) {
-        byte type = 2;
+    public static byte[] getRepeatedProto2(Vector v) {
         byte[] result = new byte[0];
         if (v.size() == 0) return result;
         else {
             ByteArrayOutputStream bout = new ByteArrayOutputStream();
             try {
-                bout.write(getKey(fieldNumber, type));
                 ByteArrayOutputStream bData = new ByteArrayOutputStream();
                 for(int i=0; i < v.size(); i++) bData.write((byte[]) v.elementAt(i));
                 byte[] data = bData.toByteArray();
-                bout.write(getVarint32(data.length));
                 bout.write(data);
                 result = bout.toByteArray();
             } catch (IOException e) {}
@@ -191,51 +138,30 @@ public class Serializer3 {
     }
 
 
-    /**
-     * Различается
-     * */
     private static byte[] getType0_32(int fieldNumber, int data) {
         byte type = 0; // Varint	int32, uint32, sint32, bool, enum
         byte[] result = new byte[0];
-        if (data == 0) return result;
-        else {
             ByteArrayOutputStream bout = new ByteArrayOutputStream();
             try {
                 bout.write(getKey(fieldNumber, type));//(fieldNumber << 3) | type);
                 bout.write(getVarint32(data));
                 result = bout.toByteArray();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            } catch (IOException e) {}
             return result;
-        }
     }
 
-
-    /**
-     * Различается
-     * */
     private static byte[] getType0_64(int fieldNumber, long data) {
         byte type = 0; // Varint	int64, uint64, sint64
         byte[] result = new byte[0];
-        if (data == 0) return result;
-        else {
             ByteArrayOutputStream bout = new ByteArrayOutputStream();
             try {
                 bout.write(getKey(fieldNumber, type));
                 bout.write(getVarint64(data));
                 result = bout.toByteArray();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            } catch (IOException e) {}
             return result;
-        }
     }
 
-
-    /**
-     * Одинаково для прото 2 и 3
-     */
     private static byte[] getType1(int fieldNumber, long data) {
         byte type = 1;
         byte[] result = new byte[0];
@@ -250,28 +176,15 @@ public class Serializer3 {
             return result;
         }
     }
-
-
-
-
-
-    /**
-     * Одинаково для прото 2 и 3
-     */
     private static byte[] get8Bytes(long data) {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         for (int i = 0; i < 64; i += 8) bout.write((byte) (0xFF & (data >> i)));
         return bout.toByteArray();
     }
 
-    /**
-     * Одинаково для прото 2 и 3
-     */
     private static byte[] getType5(int fieldNumber, int data) {
         byte type = 5;
         byte[] result = new byte[0];
-        if (data == 0) return result;
-        else {
             ByteArrayOutputStream bout = new ByteArrayOutputStream();
             try {
                 bout.write(getKey(fieldNumber, type));
@@ -280,39 +193,28 @@ public class Serializer3 {
             } catch (IOException ignored) {
             }
             return result;
-        }
     }
 
-    /**
-     * Одинаково для прото 2 и 3
-     */
     private static byte[] get4Bytes(int data) {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         for (int i = 0; i < 32; i += 8) bout.write((byte) (0xFF & (data >> i)));
         return bout.toByteArray();
     }
 
-    /**
-     * Одинаково для прото 2 и 3
-     */
+
     public static byte[] getNestedMessage(int fieldNumber, byte[] data) {
         byte type = 2; // Length-delimited	string, bytes, embedded messages, packed repeated fields
         byte[] result = new byte[] {0};
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        //bout.write((byte) data.length);
         try {
             bout.write(getVarint32((fieldNumber << 3) | type));
             bout.write(getVarint32(data.length));
             bout.write(data);
             result = bout.toByteArray();
         } catch (IOException e) {}
-        return result;      
-        
+        return result;
     }
 
-    /**
-     * Одинаково для прото 2 и 3
-     */
     private static byte[] getKey(int fieldNumber, byte type) {
         fieldNumber <<= 3;
         if ((fieldNumber >>> 7) == 0) return new byte[] {(byte) ((byte) fieldNumber | type)};
@@ -323,10 +225,7 @@ public class Serializer3 {
         }
     }
 
-    /**
-     * Одинаково для прото 2 и 3
-     */
-    private static byte[] getVarint32(int data) {
+    public static byte[] getVarint32(int data) {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         while(true) {
             byte elem = (byte) (data & 0xFF);
@@ -340,9 +239,6 @@ public class Serializer3 {
         return bout.toByteArray();
     }
 
-    /**
-     * Одинаково для прото 2 и 3
-     */
     private static byte[] getVarint64(long data) {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         while(true) {
@@ -355,6 +251,5 @@ public class Serializer3 {
         }
         //System.out.println("Varint: "); Utils.printMassive(b);
         return bout.toByteArray();
-    }
-
+    }    
 }

@@ -21,7 +21,7 @@ public final class MainClassBuilderImpl implements MainClassBuilder {
         builder.append(this.createPackage(protoInput)); // Добавляет пакет для класса
         builder.append(this.createImports());  // Добавляются необходимые импорты
         builder.append(this.createClassInitialization(className)); // Название класса с расширениями и реализациями
-        builder.append(this.createStaticUnknownTagHandlerInitialization()); // Добавляет DefaultUnknownTagHandlerImpl ?????????
+        builder.append(this.createStaticUnknownTagHandlerInitialization()); // Добавля т DefaultUnknownTagHandlerImpl ?????????
         builder.append(this.createFields(protoInput)); // Добавляет объявление полей
         builder.append(this.createNewBuilderMethod());  // Добавляет метод, который возвращает новый билдер
         builder.append(this.createConstructor(className, protoInput)); // Добавляет конструктор через билдер
@@ -63,10 +63,10 @@ public final class MainClassBuilderImpl implements MainClassBuilder {
                 builder.append(this.resourceFormat.getString("main.fields", field.getType().getImplementationType(), field.getName()));
             }
 
-            builder.append(this.resourceFormat.getString("main.fields.number", JavaSourceCodeUtil.createCapitalLetterName(field.getName()), Integer.toString(field.getId())));
             if (field.getScope() == ValidScopes.OPTIONAL) {
                 builder.append(this.resourceFormat.getString("main.fields.bool", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName())));
             }
+            builder.append(this.resourceFormat.getString("main.fields.number", JavaSourceCodeUtil.createFieldNumberName(field.getName()), Integer.toString(field.getId())));
         }
 
         return builder.toString();

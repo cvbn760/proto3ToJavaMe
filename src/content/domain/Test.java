@@ -1,9 +1,22 @@
 package content.domain;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Test {
     public static void main(String...args) throws IOException {
+
+        String str = "alexTestVoidMain";
+//        boolean result = false;
+//        result = Pattern.compile(".*\\s*(message|enum)\\s*.*").matcher(str).matches();
+
+        String[] one = str.split("(?=[A-Z])");
+        String s = Arrays.stream(one).map(st -> st.toUpperCase()).collect(Collectors.joining("_"));
+//        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+
+        System.out.println(s);
 //
 //        ByteService byteService = new ByteService();
 ////        // Создаем объект класа от генератора Дмитрия К.

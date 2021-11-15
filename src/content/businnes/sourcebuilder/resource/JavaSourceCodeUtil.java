@@ -3,6 +3,9 @@ package content.businnes.sourcebuilder.resource;
 import content.domain.proto.ListImplementation;
 import content.domain.proto.ValidTypes;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public enum JavaSourceCodeUtil {
     JavaSourceCodeUtil() {
     };
@@ -34,5 +37,15 @@ public enum JavaSourceCodeUtil {
         }
 
         return methodName;
+    }
+
+    /**
+     *
+     * @param name
+     * @return
+     */
+    public static String createFieldNumberName(String name){
+        String[] one = name.split("(?=[A-Z])");
+        return Arrays.stream(one).map(st -> st.toUpperCase()).collect(Collectors.joining("_"));
     }
 }

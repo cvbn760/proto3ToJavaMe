@@ -1,4 +1,4 @@
-package content.com.itelma.proto3;
+package itelma;
 
 import java.io.*;
 import java.util.Vector;

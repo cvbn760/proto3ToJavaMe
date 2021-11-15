@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package content.com.itelma.proto3;
+package itelma;
 
 /**
  *
  * @author kozenkov
  */
-public class IntData {
-    public final int value;
+public class LongData {
+    public final long value;
     public final int sizeProto; // кол-во байт, занимаемых значением в исходном прото-массиве
 
-    public IntData(int value, int sizeProto) {
+    public LongData(long value, int sizeProto) {
         this.value = value;
         this.sizeProto = sizeProto;
     }    

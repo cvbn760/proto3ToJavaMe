@@ -1,4 +1,4 @@
-package content.com.itelma.proto3;
+package itelma;
 
 /**
  * @author klokov

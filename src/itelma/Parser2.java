@@ -1,4 +1,4 @@
-package content.com.itelma.proto3;
+package itelma;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Vector;
