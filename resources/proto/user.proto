@@ -1,4 +1,24 @@
 
+// возвращает результат конфигурации порогов
+message AccelDataConfigResponse
+{
+  enum DataConfigResponse {
+    SUCCESS = 0; // параметры заданы успешно
+    FAIL_INVALID_DATA = 1;    // не удалось задать параметры из-за их некорректности
+    FAIL_HARDWARE = 2;        // не удалось задать  параметры из-за аппаратной ошибки устройства
+  }
+  DataConfigResponse DataConfigResp = 1;
+}
+
+// данные о резком маневре
+message AccelData
+{
+  int32 MaxValue = 1;                                     // максимальное достигнутое значение ускорения, mg
+  repeated uint32 Durations = 2;            // реальные длительности по порогам 1-4, мс
+  repeated uint32 TresholdDurations = 3;    // значения порогов длительностей 1-4, мс
+  repeated int32 TresholdValues = 4;        // значения порогов ускорений 1-4, mg
+}
+
 // Параметры БЭГа
 message ClientParams
 {

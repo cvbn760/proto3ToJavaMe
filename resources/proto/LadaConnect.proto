@@ -92,10 +92,10 @@ message AccelDataConfigResponse
 // данные о резком маневре
 message AccelData
 {
-//	int32 MaxValue = 1;                                     // максимальное достигнутое значение ускорения, mg
+	int32 MaxValue = 1;                                     // максимальное достигнутое значение ускорения, mg
 	repeated uint32 Durations = 2;            // реальные длительности по порогам 1-4, мс
-//	repeated uint32 TresholdDurations = 3;    // значения порогов длительностей 1-4, мс
-//	repeated int32 TresholdValues = 4;        // значения порогов ускорений 1-4, mg
+	repeated uint32 TresholdDurations = 3;    // значения порогов длительностей 1-4, мс
+	repeated int32 TresholdValues = 4;        // значения порогов ускорений 1-4, mg
 }
 
 // версия ЭРА-ГЛОНАСС
