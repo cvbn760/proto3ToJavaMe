@@ -74,7 +74,7 @@ public final class MainClassBuilderImpl implements MainClassBuilder {
     private String createConstructor(String className, ProtoFileInput protoInput) {
         StringBuilder builder = new StringBuilder();
         builder.append(this.resourceFormat.getString("main.constructor", className));
-        builder.append(this.resourceFormat.getString("main.constructor.if.start"));
+//        builder.append(this.resourceFormat.getString("main.constructor.if.start"));
         boolean containsRequired = false;
 
         for (int i = 0; i < protoInput.getFields().size(); ++i) {
@@ -89,15 +89,15 @@ public final class MainClassBuilderImpl implements MainClassBuilder {
             }
         }
 
-        if (!containsRequired) {
-            builder.append("true");
-        }
+//        if (!containsRequired) {
+//            builder.append("true");
+//        }
 
-        builder.append(this.resourceFormat.getString("main.constructor.if.end"));
+//        builder.append(this.resourceFormat.getString("main.constructor.if.end"));
         builder.append(this.createConstructorFields(protoInput));
-        builder.append(this.resourceFormat.getString("main.constructor.else"));
+//        builder.append(this.resourceFormat.getString("main.constructor.else"));
         builder.append(this.createExceptionString(protoInput));
-        builder.append(this.resourceFormat.getString("main.constructor.else.end"));
+//        builder.append(this.resourceFormat.getString("main.constructor.else.end"));
         builder.append(this.resourceFormat.getString("main.method.end"));
         return builder.toString();
     }
