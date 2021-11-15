@@ -28,7 +28,7 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
         builder.append(this.createWriteFields()); //
         builder.append(this.createParseFields(className)); //
         builder.append(this.createGetNextFieldNumber()); //
-        builder.append(this.createPopulateWithField()); //
+        builder.append(this.createPopulateWithField(className)); //
         return builder;
     }
 
@@ -131,9 +131,9 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
         return this.resourceFormat.getString("packageprotected.static.getnextfieldnumber", ResourceFormatUtil.COMMON.getString("class.input.reader"));
     }
 
-    private String createPopulateWithField() {
+    private String createPopulateWithField(String className) {
         StringBuilder builder = new StringBuilder();
-        builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.start", ResourceFormatUtil.COMMON.getString("class.input.reader")));
+        builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.start", className));
         Iterator i$ = this.protoInput.getFields().iterator();
 
         while (i$.hasNext()) {
@@ -145,7 +145,7 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
                     builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.fields.list.nested", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName()), JavaSourceCodeUtil.createCapitalLetterMethod(field.getType().getImplementationType())));
                 }
             } else if (this.isValidType(field.getType())) {
-                builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.fields", JavaSourceCodeUtil.createFieldNumberName(field.getName()), JavaSourceCodeUtil.createCapitalLetterMethod(field.getType().getImplementationType()), JavaSourceCodeUtil.createCapitalLetterMethod(field.getName()))) ;
+                        builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.fields", JavaSourceCodeUtil.createFieldNumberName(field.getName()), field.getType().getImplementationType(), field.getName(), String.valueOf(field.getSyntax()), field.getType().getName())) ;
             } else {
                 builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.fields.nested", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName()), JavaSourceCodeUtil.createCapitalLetterMethod(field.getType().getImplementationType())));
             }

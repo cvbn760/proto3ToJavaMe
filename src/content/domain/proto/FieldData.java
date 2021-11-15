@@ -2,7 +2,10 @@ package content.domain.proto;
 
 import content.domain.metadata.DataType;
 
+import java.io.IOException;
+
 public class FieldData {
+    private int syntax = 3;
     private int id;
     private ValidScopes scope;
     private DataType type;
@@ -11,6 +14,17 @@ public class FieldData {
     private ListImplementation listImpl;
 
     public FieldData() {
+    }
+
+    public int getSyntax() {
+        return syntax;
+    }
+
+    public void setSyntax(int syntax) throws IOException {
+        if (syntax < 2 || syntax > 3){
+            throw new IOException("Non-existent syntax version specified. Only 2 or 3 possible...");
+        }
+        this.syntax = syntax;
     }
 
     public ValidScopes getScope() {
@@ -62,6 +76,7 @@ public class FieldData {
         StringBuilder sb = new StringBuilder();
         sb.append("FieldData");
         sb.append("{id=").append(this.id);
+        sb.append(", syntax=").append(this.syntax);
         sb.append(", scope=").append(this.scope);
         sb.append(", type=").append(this.type);
         sb.append(", name='").append(this.name).append('\'');

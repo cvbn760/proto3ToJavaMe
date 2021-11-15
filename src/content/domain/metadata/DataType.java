@@ -10,4 +10,6 @@ public interface DataType {
     boolean isPrimitiveType();
 
     String getJavaObjectType();
+
+    String getName();
 }

@@ -29,4 +29,9 @@ public class CustomType implements DataType {
     public String getJavaObjectType() {
         return this.getImplementationType();
     }
+
+    @Override
+    public String getName() {
+        return this.getName();
+    }
 }
