@@ -21,7 +21,6 @@ public final class MainClassBuilderImpl implements MainClassBuilder {
         builder.append(this.createPackage(protoInput)); // Добавляет пакет для класса
         builder.append(this.createImports());  // Добавляются необходимые импорты
         builder.append(this.createClassInitialization(className)); // Название класса с расширениями и реализациями
-        builder.append(this.createStaticUnknownTagHandlerInitialization()); // Добавля т DefaultUnknownTagHandlerImpl ?????????
         builder.append(this.createFields(protoInput)); // Добавляет объявление полей
         builder.append(this.createNewBuilderMethod());  // Добавляет метод, который возвращает новый билдер
         builder.append(this.createConstructor(className, protoInput)); // Добавляет конструктор через билдер
@@ -46,10 +45,6 @@ public final class MainClassBuilderImpl implements MainClassBuilder {
 
     private String createClassInitialization(String className) {
         return this.resourceFormat.getString("main.init", className);
-    }
-
-    private String createStaticUnknownTagHandlerInitialization() {
-        return this.resourceFormat.getString("main.fields.static.unknowntaghandler");
     }
 
     private String createFields(ProtoFileInput protoInput) {

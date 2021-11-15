@@ -11,16 +11,11 @@ public final class StaticMethodsBuilderImpl implements StaticMethodsBuilder {
 
     public StringBuilder createStaticMethods(String className) {
         StringBuilder builder = new StringBuilder();
-        builder.append(this.createSetUnknownTagHandler(className));
         builder.append(this.createParseFromByteArray(className));
         builder.append(this.createParseFromInputStream(className));
         builder.append(this.createParseDelimitedFromInputStream(className));
         builder.append(this.createClassEnd());
         return builder;
-    }
-
-    private String createSetUnknownTagHandler(String className) {
-        return this.resourceFormat.getString("static.set.unknowntaghandler", className);
     }
 
     private String createParseFromByteArray(String className) {
