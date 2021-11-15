@@ -22,6 +22,7 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
         this.protoInput = protoInput;
         StringBuilder builder = new StringBuilder();
         builder.append(this.createPopulateWithField(className));
+        builder.append(this.createToByteArrayMethod(className));
         return builder;
     }
 
@@ -39,6 +40,36 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
         }
 
         return isValidType;
+    }
+
+    /**
+     * Добавляет в каждый генерируемый класс метод toByteArray()
+     * @param className - имя класса
+     */
+    private String createToByteArrayMethod(String className){
+        StringBuilder builder = new StringBuilder();
+        builder.append(this.resourceFormat.getString("public.createtobytearraymethod.start"));
+        builder.append(this.resourceFormat.getString("public.createtobytearraymethod.trystart"));
+        Iterator i$ = this.protoInput.getFields().iterator();
+        while (i$.hasNext()){
+            FieldData field = (FieldData) i$.next();
+            if (field.isList()) {
+                if (this.isValidType(field.getType())) {
+
+                }
+                else {
+
+                }
+            }
+            else if (this.isValidType(field.getType())) {
+                builder.append(this.resourceFormat.getString("public.createtobytearraymethod.trycontent", field.getName(), String.valueOf(field.getSyntax()), field.getType().getName(), JavaSourceCodeUtil.createFieldNumberName(field.getName())));
+            }
+            else {
+
+            }
+        }
+        builder.append(this.resourceFormat.getString("public.createtobytearraymethod.tryend"));
+        return builder.toString();
     }
 
     private String createPopulateWithField(String className) {

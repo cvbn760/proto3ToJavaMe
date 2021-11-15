@@ -7,3 +7,12 @@ message ClientParams
   string  StringValue    = 3;  // Текстовое значение параметра или
   int32   IntValue       = 4;  // Числовое значение параметра
 }
+
+// версия ЭРА-ГЛОНАСС
+message EraIdData
+{
+  bytes IMEI = 1;            		// идентификатор IMEI, ОБЯЗАТЕЛЬНО
+  bytes EraSoftVerXC = 2; 		// версия ПО ХС, ОБЯЗАТЕЛЬНО
+  bytes EraSoftVerBoot = 3; 		// версия ПО загрузчика, ОБЯЗАТЕЛЬНО
+  bytes EraSoftVerMidlet = 4; 	// версия ПО мидлета, ОБЯЗАТЕЛЬНО
+}
