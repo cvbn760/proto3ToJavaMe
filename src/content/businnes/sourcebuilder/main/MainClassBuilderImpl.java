@@ -40,7 +40,12 @@ public final class MainClassBuilderImpl implements MainClassBuilder {
 
     private String createImports() {
         String mainPackage = ResourceFormatUtil.COMMON.getString("imports.package.structure.main");
-        return this.resourceFormat.getString("main.import.statements", (new Date()).toString(), mainPackage, mainPackage + ResourceFormatUtil.COMMON.getString("imports.package.structure.input"), mainPackage + ResourceFormatUtil.COMMON.getString("imports.package.structure.output"), mainPackage + ResourceFormatUtil.COMMON.getString("imports.package.structure.taghandler"));
+        return this.resourceFormat.getString("main.import.statements",
+                (new Date()).toString(),
+                mainPackage,
+                mainPackage + ResourceFormatUtil.COMMON.getString("imports.package.structure.input"),
+                mainPackage + ResourceFormatUtil.COMMON.getString("imports.package.structure.output"),"3"
+        );
     }
 
     private String createClassInitialization(String className) {
@@ -57,10 +62,7 @@ public final class MainClassBuilderImpl implements MainClassBuilder {
             } else {
                 builder.append(this.resourceFormat.getString("main.fields", field.getType().getImplementationType(), field.getName()));
             }
-
-            if (field.getScope() == ValidScopes.OPTIONAL) {
-                builder.append(this.resourceFormat.getString("main.fields.bool", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName())));
-            }
+            builder.append(this.resourceFormat.getString("main.fields.bool", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName())));
             builder.append(this.resourceFormat.getString("main.fields.number", JavaSourceCodeUtil.createFieldNumberName(field.getName()), Integer.toString(field.getId())));
         }
 
@@ -102,9 +104,7 @@ public final class MainClassBuilderImpl implements MainClassBuilder {
         while (i$.hasNext()) {
             FieldData field = (FieldData) i$.next();
             builder.append(this.resourceFormat.getString("main.constructor.fields", field.getName()));
-            if (field.getScope() == ValidScopes.OPTIONAL) {
-                builder.append(this.resourceFormat.getString("main.constructor.fields.bool", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName())));
-            }
+            builder.append(this.resourceFormat.getString("main.constructor.fields.bool", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName())));
         }
 
         return builder.toString();

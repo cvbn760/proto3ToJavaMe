@@ -1,7 +1,7 @@
 package content.domain.proto;
 
 public enum ListImplementation {
-    VECTOR("java.util.Vector");
+    VECTOR("Vector");
 
     private final String listImpl;
 

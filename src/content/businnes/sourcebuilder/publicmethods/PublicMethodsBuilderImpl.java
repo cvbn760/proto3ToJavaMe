@@ -54,7 +54,7 @@ public final class PublicMethodsBuilderImpl implements PublicMethodsBuilder {
                 if (field.getScope() != ValidScopes.REQUIRED && field.getScope() != ValidScopes.REPEATED) {
                     builder.append(this.resourceFormat.getString("public.tostring.fields.optional", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName()), field.getName()));
                 } else {
-                    builder.append(this.resourceFormat.getString("public.tostring.fields", field.getName()));
+                    builder.append(this.resourceFormat.getString("public.tostring.fields", field.getName(), String.valueOf(field.getSyntax())));
                 }
             }
 

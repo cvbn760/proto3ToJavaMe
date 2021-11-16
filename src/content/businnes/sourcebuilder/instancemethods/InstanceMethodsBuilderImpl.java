@@ -55,7 +55,7 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
             FieldData field = (FieldData) i$.next();
             if (field.isList()) {
                 if (this.isValidType(field.getType())) {
-
+                    builder.append(this.resourceFormat.getString("public.createtobytearraymethod.trycontent", field.getName(), String.valueOf(field.getSyntax()),  "RepeatedPacked", JavaSourceCodeUtil.createFieldNumberName(field.getName())));
                 }
                 else {
 
@@ -74,14 +74,14 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
 
     private String createPopulateWithField(String className) {
         StringBuilder builder = new StringBuilder();
-        builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.start", className));
+        builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.start", className, String.valueOf(protoInput.getFields().get(0).getSyntax())));
         Iterator i$ = this.protoInput.getFields().iterator();
 
         while (i$.hasNext()) {
             FieldData field = (FieldData) i$.next();
             if (field.isList()) {
                 if (this.isValidType(field.getType())) {
-                    builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.fields.list", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName()), JavaSourceCodeUtil.createCapitalLetterMethod(field.getType().getImplementationType())));
+                    builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.fields.list", JavaSourceCodeUtil.createFieldNumberName(field.getName()), String.valueOf(field.getSyntax()), field.getName()));
                 } else {
                     builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.fields.list.nested", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName()), JavaSourceCodeUtil.createCapitalLetterMethod(field.getType().getImplementationType())));
                 }
