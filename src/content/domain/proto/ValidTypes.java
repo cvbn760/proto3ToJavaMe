@@ -66,7 +66,6 @@ public enum ValidTypes implements DataType {
         return this.javaObjectType;
     }
 
-    @Override
     public String getName() {
         return this.name;
     }

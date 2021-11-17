@@ -57,14 +57,18 @@ public final class InternalClassBuilderImpl implements InternalClassBuilder {
         while (i$.hasNext()) {
             FieldData field = (FieldData) i$.next();
             if (field.isList()) {
-                builder.append(this.resourceFormat.getString("internal.builder.methods.list", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName()), field.getListImpl().getImplementation(), "vector", field.getType().getImplementationType()));
-
-
-
+                if (field.getType().isPrimitiveType()) {
+                    // если лист состоит из примитивов
+                    builder.append(this.resourceFormat.getString("internal.builder.methods.list", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName()), field.getListImpl().getImplementation(), "vector", field.getType().getImplementationType()));
+                }
+                else {
+                    // если лист состоит из объектов
+                    builder.append(this.resourceFormat.getString("internal.builder.methods.list.object.add", field.getName(), field.getType().getJavaObjectType()));
+                }
                 if (field.getType().isPrimitiveType()) {
                     builder.append(this.resourceFormat.getString("internal.builder.methods.list.addelement.primitive", field.getName(), String.valueOf(field.getSyntax())));
                 } else {
-                    builder.append(this.resourceFormat.getString("internal.builder.methods.list.addelement.object", field.getName()));
+                    builder.append(this.resourceFormat.getString("internal.builder.methods.list.object.set", field.getName(), field.getType().getJavaObjectType()));
                 }
             } else {
                 builder.append(this.resourceFormat.getString("internal.builder.methods", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName()), field.getType().getImplementationType(), field.getName()));

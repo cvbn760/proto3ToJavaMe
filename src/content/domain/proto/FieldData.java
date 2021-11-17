@@ -41,6 +41,7 @@ public class FieldData {
 
     public void setId(int id) {
         this.id = id;
+        System.out.println(this);
     }
 
     public String getName() {

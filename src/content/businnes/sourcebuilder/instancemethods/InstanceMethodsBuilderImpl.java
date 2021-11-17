@@ -8,11 +8,15 @@ import content.domain.proto.FieldData;
 import content.domain.proto.ProtoFileInput;
 import content.domain.proto.ValidTypes;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder {
     private final ResourceFormatUtil resourceFormat;
     private ProtoFileInput protoInput;
+    private List<FieldData> fieldDatas = new ArrayList<>();
 
     public InstanceMethodsBuilderImpl() {
         this.resourceFormat = ResourceFormatUtil.INSTANCE_METHODS;
@@ -23,7 +27,19 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
         StringBuilder builder = new StringBuilder();
         builder.append(this.createPopulateWithField(className));
         builder.append(this.createToByteArrayMethod(className));
+        if (fieldDatas.size() != 0){
+            builder.append(this.createGetBytePackMethod(fieldDatas));
+        }
         return builder;
+    }
+
+    private String createGetBytePackMethod(List<FieldData> fieldDatas){
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < fieldDatas.size(); i ++){
+            FieldData fieldData = (FieldData) fieldDatas.get(i);
+            stringBuilder.append(this.resourceFormat.getString("private.get.byte.pack.method.start", fieldData.getName(), fieldData.getType().getJavaObjectType()));
+        }
+        return stringBuilder.toString();
     }
 
     private boolean isValidType(DataType type) {
@@ -58,7 +74,9 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
                     builder.append(this.resourceFormat.getString("public.createtobytearraymethod.trycontent", field.getName(), String.valueOf(field.getSyntax()),  "RepeatedPacked", JavaSourceCodeUtil.createFieldNumberName(field.getName())));
                 }
                 else {
-
+                    // Если лист состоит из объект класса (непримитивных типов)
+                    builder.append(this.resourceFormat.getString("public.createtobytearraymethod.trycontent.list.object", field.getName(), String.valueOf(field.getSyntax()), JavaSourceCodeUtil.createFieldNumberName(field.getName())));
+                    fieldDatas.add(field);
                 }
             }
             else if (this.isValidType(field.getType())) {
@@ -79,16 +97,21 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
 
         while (i$.hasNext()) {
             FieldData field = (FieldData) i$.next();
+            System.out.println("field >>>>>>>>>>" + field);
             if (field.isList()) {
                 if (this.isValidType(field.getType())) {
+                    // Если поле
                     builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.fields.list", JavaSourceCodeUtil.createFieldNumberName(field.getName()), String.valueOf(field.getSyntax()), field.getName()));
                 } else {
-                    builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.fields.list.nested", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName()), JavaSourceCodeUtil.createCapitalLetterMethod(field.getType().getImplementationType())));
+                    // Если поле
+                    builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.fields.list.nested", JavaSourceCodeUtil.createFieldNumberName(field.getName()), String.valueOf(field.getSyntax()), field.getName(), field.getType().getJavaObjectType()));
                 }
             } else if (this.isValidType(field.getType())) {
+                // Если поле
                         builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.fields", JavaSourceCodeUtil.createFieldNumberName(field.getName()), field.getType().getImplementationType(), field.getName(), String.valueOf(field.getSyntax()), field.getType().getName())) ;
             } else {
-                builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.fields.nested", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName()), JavaSourceCodeUtil.createCapitalLetterMethod(field.getType().getImplementationType())));
+                // Если поле
+//                builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.fields.nested",JavaSourceCodeUtil.createFieldNumberName(field.getName())));
             }
         }
 

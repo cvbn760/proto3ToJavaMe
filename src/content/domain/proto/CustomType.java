@@ -30,7 +30,6 @@ public class CustomType implements DataType {
         return this.getImplementationType();
     }
 
-    @Override
     public String getName() {
         return this.getName();
     }
