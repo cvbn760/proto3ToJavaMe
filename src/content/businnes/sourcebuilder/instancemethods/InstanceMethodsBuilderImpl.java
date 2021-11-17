@@ -80,6 +80,7 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
                 }
             }
             else if (this.isValidType(field.getType())) {
+//                if (field.getType().getImplementationType())
                 builder.append(this.resourceFormat.getString("public.createtobytearraymethod.trycontent", field.getName(), String.valueOf(field.getSyntax()), field.getType().getName(), JavaSourceCodeUtil.createFieldNumberName(field.getName())));
             }
             else {

@@ -18,7 +18,7 @@ public enum ValidTypes implements DataType {
     BOOL("bool", "boolean", "DATA_TYPE_BOOLEAN", true, "Boolean", "Bool"), //
     STRING("string", "String", "DATA_TYPE_STRING", false, "String"), //
     ENUM("enum", "enum", "DATA_TYPE_ENUM", true, "Integer", "Enum"), //
-    ENUM_VALUE("", "int", "DATA_TYPE_INT", true, "Integer","Enum"), //
+    ENUM_VALUE("", "int", "DATA_TYPE_INT", true, "Integer","Int32"), //
     BYTES("bytes", "byte[]", "DATA_TYPE_BYTESTRING", false, "Bytes"); //
 
     private final String implementationType;

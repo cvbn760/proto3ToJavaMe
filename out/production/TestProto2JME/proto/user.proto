@@ -1,25 +1,54 @@
+//// оригинал файла
+//// 22.10.21, добавлено: ClientParams, ClientResponse, ServerCommand,
+//// изменено: IncomingMsg, OutcomingMsg
+//
+//syntax = "proto3";
+//
+//option optimize_for = SPEED;
+//
+//
+//// информация о местоположении
+//message LocationData
+//{
+//  // признак достоверности навигационных данных
+//  enum GnssValid {
+//    INVALID  = 0; // данные недостоверны
+//    GPS_FIX  = 1; // данные достоверны, обычная точность
+//    DGPS_FIX = 2; // данные достоверны, повышенная точность
+//    PRECISION= 3; // данные достоверны, наивысшая точность
+//  }
+//
+//  fixed32 OccurrenceTime = 1;        // время UTC сбора координатных данных, unixtimestamp, ОБЯЗАТЕЛЬНО
+//  sfixed32 Lat = 2;                  // широта * 10000000 и округленная до целого (например 55.123 будет представлена как 551230000), ОБЯЗАТЕЛЬНО
+//  sfixed32 Lon = 3;                  // долгота * 10000000 и округленная до целого (например 35.123 будет представлена как 351230000), ОБЯЗАТЕЛЬНО
+//  uint32 Speed = 4;                  // скорость, CAN, км/ч, ОБЯЗАТЕЛЬНО, PhysValue = RawValue * 0.01 ( 0..655.34 км/ч, шаг 0.01 км/ч, 0x00 - 0xEFFF, 0xFFFF - invalid value)
+//  uint32 MaxSpeed = 5;               // максимальная скорость за период от предыдущей передачи LocationData, км/ч
+//  int32 Altitude = 6;                // Высота над уровнем моря, м, ОБЯЗАТЕЛЬНО
+//  uint32 GlonassGpsNum = 7;          // Число спутников GPS и ГЛОНАСС, ОБЯЗАТЕЛЬНО
+//  uint32 Odometer = 8;               // счетчик пробега. Для корректной работы системы должен строго неубывать, PhysValue = RawValue ( 0..999 999 км, шаг 1 км, 0x00 - 0xF423F, 0xFFFFFF - invalid value)
+//  uint32 Dilution = 9;               // Dilution = (HDOP * 100), абсолютное значение
+//  GnssValid GnssValidity = 10;
+//  uint32 Course          = 11;       // курс (угол отклонения вектора движения от направления на север (0-360) )
+//}
 
-
-message LocationData
+// ответ на проверку связи с сервером
+message HandshakeResponse
 {
-  // признак достоверности навигационных данных
-  enum GnssValid {
-    INVALID  = 0; // данные недостоверны
-    GPS_FIX  = 1; // данные достоверны, обычная точность
-    DGPS_FIX = 2; // данные достоверны, повышенная точность
-    PRECISION= 3; // данные достоверны, наивысшая точность
+  enum HandShakeStatus {
+    OK = 0;
+    NOK_GENERAL_ERROR=1;			// неизвестная ошибка на IT-платформе
+    NOK_SERVICE_ERROR=2;			// ошибка на службе
+    NOK_SERVICE_API_ERROR=3;		// ошибка на стороне API
+    NOK_DATABASE_ERROR=4;			// ошибка базы данных
+    NOK_JOURNEY_AGGREGATOR_ERROR=5; // ошибка journey aggregator
+    NOK_SMS_GATEWAY_ERROR=6;		// ошибка SMS gateway
+    NOK_MQTT_SERVER_ERROR=7;		// ошибка MQTT
+    NOK_NO_ECU_MASK=8;				// only for activation-ready
+    NOK_NO_BCM_MASK=9;				// only for activation-ready
+    NOK_SIM_NOT_ACTIVATED=10;		// only for activation-ready
+    NOK_TRAFFIC_LIMIT=11;			// only for activation-ready
+    NOK_SMS_LIMIT=12;				// only for activation-ready
   }
 
-  fixed32 OccurrenceTime = 1;        // время UTC сбора координатных данных, unixtimestamp, ОБЯЗАТЕЛЬНО
-  sfixed32 Lat = 2;                  // широта * 10000000 и округленная до целого (например 55.123 будет представлена как 551230000), ОБЯЗАТЕЛЬНО
-  sfixed32 Lon = 3;                  // долгота * 10000000 и округленная до целого (например 35.123 будет представлена как 351230000), ОБЯЗАТЕЛЬНО
-  uint32 Speed = 4;                  // скорость, CAN, км/ч, ОБЯЗАТЕЛЬНО, PhysValue = RawValue * 0.01 ( 0..655.34 км/ч, шаг 0.01 км/ч, 0x00 - 0xEFFF, 0xFFFF - invalid value)
-  uint32 MaxSpeed = 5;               // максимальная скорость за период от предыдущей передачи LocationData, км/ч
-  int32 Altitude = 6;                // Высота над уровнем моря, м, ОБЯЗАТЕЛЬНО
-  uint32 GlonassGpsNum = 7;          // Число спутников GPS и ГЛОНАСС, ОБЯЗАТЕЛЬНО
-  uint32 Odometer = 8;               // счетчик пробега. Для корректной работы системы должен строго неубывать, PhysValue = RawValue ( 0..999 999 км, шаг 1 км, 0x00 - 0xF423F, 0xFFFFFF - invalid value)
-  uint32 Dilution = 9;               // Dilution = (HDOP * 100), абсолютное значение
-  GnssValid GnssValidity = 10;
-  uint32 Course          = 11;       // курс (угол отклонения вектора движения от направления на север (0-360) )
+  HandShakeStatus HandShakeState = 1;
 }
-
