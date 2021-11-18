@@ -1,35 +1,34 @@
-//// оригинал файла
-//// 22.10.21, добавлено: ClientParams, ClientResponse, ServerCommand,
-//// изменено: IncomingMsg, OutcomingMsg
-//
-//syntax = "proto3";
-//
-//option optimize_for = SPEED;
-//
-//
-//// информация о местоположении
-//message LocationData
-//{
-//  // признак достоверности навигационных данных
-//  enum GnssValid {
-//    INVALID  = 0; // данные недостоверны
-//    GPS_FIX  = 1; // данные достоверны, обычная точность
-//    DGPS_FIX = 2; // данные достоверны, повышенная точность
-//    PRECISION= 3; // данные достоверны, наивысшая точность
-//  }
-//
-//  fixed32 OccurrenceTime = 1;        // время UTC сбора координатных данных, unixtimestamp, ОБЯЗАТЕЛЬНО
-//  sfixed32 Lat = 2;                  // широта * 10000000 и округленная до целого (например 55.123 будет представлена как 551230000), ОБЯЗАТЕЛЬНО
-//  sfixed32 Lon = 3;                  // долгота * 10000000 и округленная до целого (например 35.123 будет представлена как 351230000), ОБЯЗАТЕЛЬНО
-//  uint32 Speed = 4;                  // скорость, CAN, км/ч, ОБЯЗАТЕЛЬНО, PhysValue = RawValue * 0.01 ( 0..655.34 км/ч, шаг 0.01 км/ч, 0x00 - 0xEFFF, 0xFFFF - invalid value)
-//  uint32 MaxSpeed = 5;               // максимальная скорость за период от предыдущей передачи LocationData, км/ч
-//  int32 Altitude = 6;                // Высота над уровнем моря, м, ОБЯЗАТЕЛЬНО
-//  uint32 GlonassGpsNum = 7;          // Число спутников GPS и ГЛОНАСС, ОБЯЗАТЕЛЬНО
-//  uint32 Odometer = 8;               // счетчик пробега. Для корректной работы системы должен строго неубывать, PhysValue = RawValue ( 0..999 999 км, шаг 1 км, 0x00 - 0xF423F, 0xFFFFFF - invalid value)
-//  uint32 Dilution = 9;               // Dilution = (HDOP * 100), абсолютное значение
-//  GnssValid GnssValidity = 10;
-//  uint32 Course          = 11;       // курс (угол отклонения вектора движения от направления на север (0-360) )
-//}
+// оригинал файла
+// 22.10.21, добавлено: ClientParams, ClientResponse, ServerCommand,
+// изменено: IncomingMsg, OutcomingMsg
+
+syntax = "proto3";
+
+option optimize_for = SPEED;
+
+// информация о местоположении
+message LocationData
+{
+  // признак достоверности навигационных данных
+  enum GnssValid {
+    INVALID  = 0; // данные недостоверны
+    GPS_FIX  = 1; // данные достоверны, обычная точность
+    DGPS_FIX = 2; // данные достоверны, повышенная точность
+    PRECISION= 3; // данные достоверны, наивысшая точность
+  }
+
+  fixed32 OccurrenceTime = 1;        // время UTC сбора координатных данных, unixtimestamp, ОБЯЗАТЕЛЬНО
+  sfixed32 Lat = 2;                  // широта * 10000000 и округленная до целого (например 55.123 будет представлена как 551230000), ОБЯЗАТЕЛЬНО
+  sfixed32 Lon = 3;                  // долгота * 10000000 и округленная до целого (например 35.123 будет представлена как 351230000), ОБЯЗАТЕЛЬНО
+  uint32 Speed = 4;                  // скорость, CAN, км/ч, ОБЯЗАТЕЛЬНО, PhysValue = RawValue * 0.01 ( 0..655.34 км/ч, шаг 0.01 км/ч, 0x00 - 0xEFFF, 0xFFFF - invalid value)
+  uint32 MaxSpeed = 5;               // максимальная скорость за период от предыдущей передачи LocationData, км/ч
+  int32 Altitude = 6;                // Высота над уровнем моря, м, ОБЯЗАТЕЛЬНО
+  uint32 GlonassGpsNum = 7;          // Число спутников GPS и ГЛОНАСС, ОБЯЗАТЕЛЬНО
+  uint32 Odometer = 8;               // счетчик пробега. Для корректной работы системы должен строго неубывать, PhysValue = RawValue ( 0..999 999 км, шаг 1 км, 0x00 - 0xF423F, 0xFFFFFF - invalid value)
+  uint32 Dilution = 9;               // Dilution = (HDOP * 100), абсолютное значение
+  GnssValid GnssValidity = 10;
+  uint32 Course          = 11;       // курс (угол отклонения вектора движения от направления на север (0-360) )
+}
 
 // ответ на проверку связи с сервером
 message HandshakeResponse
@@ -51,4 +50,17 @@ message HandshakeResponse
   }
 
   HandShakeStatus HandShakeState = 1;
+}
+
+// значения порогов для конфигурации  - массивы данных из 4-х значений: 1 2 3 4
+message AccelDataConfig
+{
+  repeated uint32 ATresholdDur = 1 [packed=true];       // значения порогов для резкого ускорения длительностей 1-4, мс
+  repeated int32 ATresholdVal = 2 [packed=true];        // значения порогов ускорений для резкого ускорения 1-4, mg
+  repeated uint32 BTresholdDur = 3 [packed=true];       // значения порогов длительностей для резкого торможения 1-4, мс
+  repeated int32 BTresholdVal = 4 [packed=true];        // значения порогов ускорений для резкого торможения 1-4, mg
+  repeated uint32 CRTresholdDur = 5 [packed=true];       // значения порогов длительностей для резкого поворота направо 1-4, мс
+  repeated int32 CRTresholdVal = 6 [packed=true];        // значения порогов ускорений для резкого поворота направо 1-4, mg
+  repeated uint32 CLTresholdDur = 7 [packed=true];       // значения порогов длительностей для резкого поворота налево 1-4, мс
+  repeated int32 CLTresholdVal = 8 [packed=true];        // значения порогов ускорений для резкого поворота налево 1-4, mg
 }

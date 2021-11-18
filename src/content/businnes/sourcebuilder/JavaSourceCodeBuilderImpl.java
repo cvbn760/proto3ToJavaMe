@@ -13,6 +13,7 @@ import content.businnes.sourcebuilder.publicmethods.PublicMethodsBuilderImpl;
 import content.businnes.sourcebuilder.staticmethods.StaticMethodsBuilder;
 import content.businnes.sourcebuilder.staticmethods.StaticMethodsBuilderImpl;
 import content.domain.java.JavaFileOutput;
+import content.domain.proto.FieldData;
 import content.domain.proto.ProtoFileInput;
 
 
@@ -47,7 +48,7 @@ public final class JavaSourceCodeBuilderImpl implements JavaSourceCodeBuilder {
             JavaFileOutput javaClass = new JavaFileOutput(protoInput.getPackageName(), protoInput.getProtoClassName());
             javaClass.setMainClass(this.mainClassBuilder.createMainClass(javaClass.getClassName(), protoInput));  // MainClassBuilderImpl
             javaClass.setEnumClasses(this.enumsBuilder.createEnums(protoInput));
-           javaClass.setInternalClass(this.internalClassBuilder.createInternalClass(javaClass.getClassName(), protoInput)); // Добавляет билдер для класса
+            javaClass.setInternalClass(this.internalClassBuilder.createInternalClass(javaClass.getClassName(), protoInput)); // Добавляет билдер для класса
             javaClass.setPrivateAndProtectedMethods(this.privateMethodsBuilder.createPrivateAndProtectedMethods(javaClass.getClassName(), protoInput));
             javaClass.setPublicMethods(this.publicMethodsBuilder.createPublicMethods(javaClass.getClassName(), protoInput));
             javaClass.setStaticMethods(this.staticMethodsBuilder.createStaticMethods(javaClass.getClassName()));

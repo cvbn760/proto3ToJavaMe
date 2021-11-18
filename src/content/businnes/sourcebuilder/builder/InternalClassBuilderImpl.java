@@ -68,7 +68,7 @@ public final class InternalClassBuilderImpl implements InternalClassBuilder {
                 if (field.getType().isPrimitiveType()) {
                     builder.append(this.resourceFormat.getString("internal.builder.methods.list.addelement.primitive", field.getName(), String.valueOf(field.getSyntax())));
                 } else {
-                    builder.append(this.resourceFormat.getString("internal.builder.methods.list.object.set", field.getName(), field.getType().getJavaObjectType()));
+                    builder.append(this.resourceFormat.getString("internal.builder.methods.list.object.set"));
                 }
             } else {
                 builder.append(this.resourceFormat.getString("internal.builder.methods", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName()), field.getType().getImplementationType(), field.getName()));

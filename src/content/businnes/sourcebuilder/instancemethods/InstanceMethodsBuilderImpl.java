@@ -8,15 +8,16 @@ import content.domain.proto.FieldData;
 import content.domain.proto.ProtoFileInput;
 import content.domain.proto.ValidTypes;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 
 public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder {
     private final ResourceFormatUtil resourceFormat;
     private ProtoFileInput protoInput;
     private List<FieldData> fieldDatas = new ArrayList<>();
+    private Set needGetArraysMethod;
 
     public InstanceMethodsBuilderImpl() {
         this.resourceFormat = ResourceFormatUtil.INSTANCE_METHODS;
@@ -30,8 +31,54 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
         if (fieldDatas.size() != 0){
             builder.append(this.createGetBytePackMethod(fieldDatas));
         }
+        if (isNeedArraysMethod()){
+            builder.append(this.createGetArrayMethod(needGetArraysMethod));
+        }
+        if (isNeedGetTypePackedMethod()) {
+            builder.append(this.createTypePacked(needGetArraysMethod));
+        }
         return builder;
     }
+
+    private boolean isNeedGetTypePackedMethod(){
+        needGetArraysMethod = new HashSet();
+        protoInput.getFields().stream()
+                .filter(distinctByKey(fd -> fd.getType().getName()))
+                .filter(field -> field.getType().isPrimitiveType() && field.isList())
+                .forEach(fld -> needGetArraysMethod.add(fld));
+        return needGetArraysMethod.size() != 0;
+    }
+
+    private String createTypePacked(Set<FieldData> fieldTypes){
+        StringBuilder builder = new StringBuilder();
+        for (FieldData field : fieldTypes){
+            builder.append(this.resourceFormat.getString("private.get.type.packed.method", JavaSourceCodeUtil.createCapitalLetterName(field.getType().getProtoType()), getPacked(field), String.valueOf(field.getSyntax()), field.getType().getJavaObjectType(), field.getType().getImplementationType(), field.getType().getName()));
+        }
+        return builder.toString();
+    }
+
+    private String createGetArrayMethod(Set<DataType> fieldTypes){
+        StringBuilder builder = new StringBuilder();
+        for (DataType type : fieldTypes) {
+            builder.append(this.resourceFormat.getString("private.need.get.arrays.method", type.getImplementationType(), type.getJavaObjectType()));
+        }
+        return builder.toString();
+    }
+
+    private boolean isNeedArraysMethod(){
+        needGetArraysMethod = new HashSet();
+        protoInput.getFields().stream()
+                .filter(distinctByKey(fd -> fd.getType().getImplementationType()))
+                .filter(field -> field.getType().isPrimitiveType() && field.isList())
+                        .forEach(fld -> needGetArraysMethod.add(fld.getType()));
+        return needGetArraysMethod.size() != 0;
+    }
+
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        final Set<Object> seen = new HashSet<>();
+        return t -> seen.add(keyExtractor.apply(t));
+    }
+
 
     private String createGetBytePackMethod(List<FieldData> fieldDatas){
         StringBuilder stringBuilder = new StringBuilder();
@@ -70,7 +117,14 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
         while (i$.hasNext()){
             FieldData field = (FieldData) i$.next();
             if (field.isList()) {
-                if (this.isValidType(field.getType())) {
+                // Если лист/packed true/примитив
+                if (field.getType().isPrimitiveType()){
+                    builder.append(this.resourceFormat.getString("public.createtobytearraymethod.trycontent.repeated.packed.primitive",field.getName(), String.valueOf(field.getSyntax()), "Repeated",getPacked(field), JavaSourceCodeUtil.createFieldNumberName(field.getName()), JavaSourceCodeUtil.createCapitalLetterName(field.getType().getProtoType())));
+                    // Нужно добавить методы для получения упакованных значений (getInt32Packed, getUInt32Packed, getSInt32Packed, getSInt64Packed.....)
+                }
+
+
+                else if (this.isValidType(field.getType())) {
                     builder.append(this.resourceFormat.getString("public.createtobytearraymethod.trycontent", field.getName(), String.valueOf(field.getSyntax()),  "RepeatedPacked", JavaSourceCodeUtil.createFieldNumberName(field.getName())));
                 }
                 else {
@@ -118,5 +172,8 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
 
         builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.end"));
         return builder.toString();
+    }
+    private String getPacked(FieldData fieldData){
+        return fieldData.getPacked() ? "Packed" : "";
     }
 }

@@ -12,12 +12,21 @@ public class FieldData {
     private String name;
     private boolean isList = false;
     private ListImplementation listImpl;
+    private boolean packed = true;
 
     public FieldData() {
     }
 
     public int getSyntax() {
         return syntax;
+    }
+
+    public void setPacked(boolean packed){
+        this.packed = packed;
+    }
+
+    public boolean getPacked(){
+        return this.packed;
     }
 
     public void setSyntax(int syntax) throws IOException {
