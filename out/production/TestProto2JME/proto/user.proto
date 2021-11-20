@@ -55,7 +55,7 @@ message HandshakeResponse
 // значения порогов для конфигурации  - массивы данных из 4-х значений: 1 2 3 4
 message AccelDataConfig
 {
-  repeated float ATresholdDur = 1 [packed=true];       // значения порогов для резкого ускорения длительностей 1-4, мс
+  repeated uint32 ATresholdDur = 1 [packed=true];       // значения порогов для резкого ускорения длительностей 1-4, мс
   repeated int32 ATresholdVal = 2 [packed=true];        // значения порогов ускорений для резкого ускорения 1-4, mg
   repeated uint32 BTresholdDur = 3 [packed=true];       // значения порогов длительностей для резкого торможения 1-4, мс
   repeated int32 BTresholdVal = 4 [packed=true];        // значения порогов ускорений для резкого торможения 1-4, mg
@@ -64,3 +64,17 @@ message AccelDataConfig
   repeated uint32 CLTresholdDur = 7 [packed=true];       // значения порогов длительностей для резкого поворота налево 1-4, мс
   repeated int32 CLTresholdVal = 8 [packed=true];        // значения порогов ускорений для резкого поворота налево 1-4, mg
 }
+
+// значения порогов для чтения  - массивы данных из 4-х значений: 1 2 3 4
+message AccelDataResponse
+{
+  repeated uint32 ATresholdDur = 1 [packed=true];       // значения порогов для резкого ускорения длительностей 1-4, мс
+  repeated int32 ATresholdVal = 2 [packed=true];        // значения порогов ускорений для резкого ускорения 1-4, mg
+  repeated uint32 BTresholdDur = 3 [packed=true];       // значения порогов длительностей для резкого торможения 1-4, мс
+  repeated int32 BTresholdVal = 4 [packed=true];        // значения порогов ускорений для резкого торможения 1-4, mg
+  repeated uint32 CRTresholdDur = 5 [packed=true];       // значения порогов длительностей для резкого поворота направо 1-4, мс
+  repeated int32 CRTresholdVal = 6 [packed=true];        // значения порогов ускорений для резкого поворота направо 1-4, mg
+  repeated uint32 CLTresholdDur = 7 [packed=true];       // значения порогов длительностей для резкого поворота налево 1-4, мс
+  repeated int32 CLTresholdVal = 8 [packed=true];        // значения порогов ускорений для резкого поворота налево 1-4, mg
+}
+

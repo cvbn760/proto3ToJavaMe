@@ -17,9 +17,9 @@ public enum ValidTypes implements DataType {
     SFIXED64("sfixed64","long", "DATA_TYPE_LONG", true, "Long", "SFixed64"),// sfixed64 - [] long ???????????????????
     BOOL("bool", "boolean", "DATA_TYPE_BOOLEAN", true, "Boolean", "Bool"), //
     STRING("string", "String", "DATA_TYPE_STRING", false, "String"), //
-    ENUM("enum", "enum", "DATA_TYPE_ENUM", true, "Integer", "Enum"), //
-    ENUM_VALUE("", "int", "DATA_TYPE_INT", true, "Integer","Int32"), //
-    BYTES("bytes", "byte[]", "DATA_TYPE_BYTESTRING", false, "Bytes"); //
+    ENUM("enum", "String", "DATA_TYPE_ENUM", true, "Integer", "Enum"), //
+    ENUM_VALUE("enum", "int", "DATA_TYPE_INT", true, "Integer","Int32"), //
+    BYTES("bytes", "byte[]", "DATA_TYPE_BYTESTRING", false, "Byte"); //
 
     private final String implementationType;
     private final String protoType;

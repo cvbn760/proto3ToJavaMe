@@ -56,21 +56,22 @@ public final class InternalClassBuilderImpl implements InternalClassBuilder {
 
         while (i$.hasNext()) {
             FieldData field = (FieldData) i$.next();
+            // Если поле - список
             if (field.isList()) {
                 if (field.getType().isPrimitiveType()) {
-                    // если лист состоит из примитивов
-                    builder.append(this.resourceFormat.getString("internal.builder.methods.list", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName()), field.getListImpl().getImplementation(), "vector", field.getType().getImplementationType()));
+                    // Если поле - список примитивов (ЗДЕСЬ ВСЕ ПРАВИЛЬНО)
+                    builder.append(this.resourceFormat.getString("internal.builder.set.primitive.list", field.getName()));
+                    builder.append(this.resourceFormat.getString("internal.builder.add.primitive.list", field.getName(), field.getType().getImplementationType(), field.getType().getJavaObjectType()));
                 }
                 else {
-                    // если лист состоит из объектов
+                    // Если поле - список объектов
                     builder.append(this.resourceFormat.getString("internal.builder.methods.list.object.add", field.getName(), field.getType().getJavaObjectType()));
-                }
-                if (field.getType().isPrimitiveType()) {
-                    builder.append(this.resourceFormat.getString("internal.builder.methods.list.addelement.primitive", field.getName(), String.valueOf(field.getSyntax())));
-                } else {
                     builder.append(this.resourceFormat.getString("internal.builder.methods.list.object.set"));
+
                 }
-            } else {
+            }
+            // Если поле - НЕ СПИСОК
+            else {
                 builder.append(this.resourceFormat.getString("internal.builder.methods", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName()), field.getType().getImplementationType(), field.getName()));
             }
         }

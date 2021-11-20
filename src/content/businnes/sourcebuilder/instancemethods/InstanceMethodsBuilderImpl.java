@@ -116,14 +116,19 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
         Iterator i$ = this.protoInput.getFields().iterator();
         while (i$.hasNext()){
             FieldData field = (FieldData) i$.next();
-            if (field.isList()) {
+            // Если ENUM/NO LIST НЕ ИСПРАВЛЯТЬ
+            if (!field.isList() && field.getType() == ValidTypes.ENUM_VALUE){
+                builder.append(this.resourceFormat.getString("public.createtobytearraymethod.trycontent.enum.nolist", field.getName(), String.valueOf(field.getSyntax()), JavaSourceCodeUtil.createCapitalLetterName(field.getType().getProtoType()), JavaSourceCodeUtil.createFieldNumberName(field.getName())));
+            }
+
+
+
+            else if (field.isList()) {
                 // Если лист/packed true/примитив
                 if (field.getType().isPrimitiveType()){
                     builder.append(this.resourceFormat.getString("public.createtobytearraymethod.trycontent.repeated.packed.primitive",field.getName(), String.valueOf(field.getSyntax()), "Repeated",getPacked(field), JavaSourceCodeUtil.createFieldNumberName(field.getName()), JavaSourceCodeUtil.createCapitalLetterName(field.getType().getProtoType())));
                     // Нужно добавить методы для получения упакованных значений (getInt32Packed, getUInt32Packed, getSInt32Packed, getSInt64Packed.....)
                 }
-
-
                 else if (this.isValidType(field.getType())) {
                     builder.append(this.resourceFormat.getString("public.createtobytearraymethod.trycontent", field.getName(), String.valueOf(field.getSyntax()),  "RepeatedPacked", JavaSourceCodeUtil.createFieldNumberName(field.getName())));
                 }
@@ -152,8 +157,19 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
 
         while (i$.hasNext()) {
             FieldData field = (FieldData) i$.next();
-            System.out.println("field >>>>>>>>>>" + field);
-            if (field.isList()) {
+            // Если поле не лист/енум/ ЗДЕСЬ БОЛЬШЕ НИЧЕГО НЕ ИСПРАВЛЯТЬ
+            if (!field.isList() && field.getType() == ValidTypes.ENUM_VALUE){
+                builder.append(this.resourceFormat.getString("public.parsing.static.enum.nolist", JavaSourceCodeUtil.createFieldNumberName(field.getName()), String.valueOf(field.getSyntax()), JavaSourceCodeUtil.createCapitalLetterName(field.getType().getProtoType()), field.getName()));
+            }
+            // Если поле - лист примитивов ЗДЕСЬ БОЛЬШЕ НИЧЕГО НЕ ИСПРАВЛЯТЬ
+            else if (field.isList() && field.getType().isPrimitiveType()){
+                builder.append(this.resourceFormat.getString("packageprotected.static.list.primitive", JavaSourceCodeUtil.createFieldNumberName(field.getName()), field.getName(), String.valueOf(field.getSyntax()), getPacked(field), field.getType().getName()));
+            }
+
+
+
+
+            else if (field.isList()) {
                 if (this.isValidType(field.getType())) {
                     // Если поле
                     builder.append(this.resourceFormat.getString("packageprotected.static.populatewithfield.fields.list", JavaSourceCodeUtil.createFieldNumberName(field.getName()), String.valueOf(field.getSyntax()), field.getName()));
