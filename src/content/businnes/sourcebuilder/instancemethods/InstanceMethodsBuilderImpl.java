@@ -125,9 +125,9 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
             if (!field.isList() && field.getType() == ValidTypes.ENUM_VALUE){
                 builder.append(this.resourceFormat.getString("public.createtobytearraymethod.trycontent.enum.nolist", field.getName(), String.valueOf(field.getSyntax()), JavaSourceCodeUtil.createCapitalLetterName(field.getType().getProtoType()), JavaSourceCodeUtil.createFieldNumberName(field.getName())));
             }
-            // Если объект/не лист/не строка
+            // Если объект/не лист/не строка ОШИБКА
             else if (!field.getType().isPrimitiveType() && field.getType() != ValidTypes.STRING && !field.isList()){
-                builder.append(this.resourceFormat.getString("public.createtobytearraymethod.object.nolist.nostring", field.getName()));
+                builder.append(this.resourceFormat.getString("public.createtobytearraymethod.object.nolist.nostring", field.getName(), String.valueOf(field.getSyntax()), JavaSourceCodeUtil.createFieldNumberName(field.getName())));
             }
 
 
