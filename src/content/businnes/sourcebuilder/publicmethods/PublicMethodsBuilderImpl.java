@@ -3,10 +3,7 @@ package content.businnes.sourcebuilder.publicmethods;
 
 import content.businnes.sourcebuilder.resource.JavaSourceCodeUtil;
 import content.businnes.sourcebuilder.resource.ResourceFormatUtil;
-import content.domain.proto.FieldData;
-import content.domain.proto.ProtoFileInput;
-import content.domain.proto.ValidScopes;
-import content.domain.proto.ValidTypes;
+import content.domain.proto.*;
 
 import java.util.Iterator;
 import java.util.List;
@@ -63,11 +60,19 @@ public final class PublicMethodsBuilderImpl implements PublicMethodsBuilder {
                 FieldData field = (FieldData) i$.next();
                 // Если НЕ лист/енум/
                 if (!field.isList() && field.getType() == ValidTypes.ENUM_VALUE){
-                    builder.append(this.resourceFormat.getString("public.tostring.fields.optional.enum", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName()), protoInput.getCurrentEnum().getName()));
+                    builder.append(this.resourceFormat.getString("public.tostring.fields.optional.enum", JavaSourceCodeUtil.createCapitalLetterMethod(field.getName()), protoInput.getEnums().iterator().next().getName()));
                 }
                 // Если лист/примитив/не енум
                 else if (field.isList() && field.getType().isPrimitiveType() && !(field.getType() == ValidTypes.ENUM_VALUE) && !(field.getType() == ValidTypes.ENUM)){
                     builder.append(this.resourceFormat.getString("public.tostring.nolist.primitive.noenum", field.getName(), field.getType().getJavaObjectType(), field.getType().getImplementationType()));
+                }
+                // Если лист/не лист/байты
+                else if (field.getType() == ValidTypes.BYTES){
+                    builder.append(this.resourceFormat.getString("public.tostring.bytes", field.getName()));
+                }
+                // Если лист/объект/др. сообщения
+                else if (field.isList() && !field.getType().isPrimitiveType()){
+                    builder.append(this.resourceFormat.getString("public.tostring.list.object.other.message", field.getName()));
                 }
 
 

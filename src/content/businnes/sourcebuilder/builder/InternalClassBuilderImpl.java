@@ -64,9 +64,9 @@ public final class InternalClassBuilderImpl implements InternalClassBuilder {
                     builder.append(this.resourceFormat.getString("internal.builder.add.primitive.list", field.getName(), field.getType().getImplementationType(), field.getType().getJavaObjectType()));
                 }
                 else {
-                    // Если поле - список объектов
+                    // Если поле - список объектов (ЗДЕСЬ ВСЕ ПРАВИЛЬНО)
                     builder.append(this.resourceFormat.getString("internal.builder.methods.list.object.add", field.getName(), field.getType().getJavaObjectType()));
-                    builder.append(this.resourceFormat.getString("internal.builder.methods.list.object.set"));
+                    builder.append(this.resourceFormat.getString("internal.builder.methods.list.object.set", field.getName()));
 
                 }
             }

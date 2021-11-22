@@ -33,6 +33,7 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
         }
         if (isNeedArraysMethod()){
             builder.append(this.createGetArrayMethod(needGetArraysMethod));
+
         }
         if (isNeedGetTypePackedMethod()) {
             builder.append(this.createTypePacked(needGetArraysMethod));
@@ -43,8 +44,8 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
     private boolean isNeedGetTypePackedMethod(){
         needGetArraysMethod = new HashSet();
         protoInput.getFields().stream()
-                .filter(distinctByKey(fd -> fd.getType().getName()))
                 .filter(field -> field.getType().isPrimitiveType() && field.isList())
+                .filter(distinctByKey(fd -> fd.getType().getName()))
                 .forEach(fld -> needGetArraysMethod.add(fld));
         return needGetArraysMethod.size() != 0;
     }
@@ -54,6 +55,7 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
         for (FieldData field : fieldTypes){
             builder.append(this.resourceFormat.getString("private.get.type.packed.method", JavaSourceCodeUtil.createCapitalLetterName(field.getType().getProtoType()), getPacked(field), String.valueOf(field.getSyntax()), field.getType().getJavaObjectType(), field.getType().getImplementationType(), field.getType().getName()));
         }
+        needGetArraysMethod.clear();
         return builder.toString();
     }
 
@@ -62,14 +64,16 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
         for (DataType type : fieldTypes) {
             builder.append(this.resourceFormat.getString("private.need.get.arrays.method", type.getImplementationType(), type.getJavaObjectType()));
         }
+        needGetArraysMethod.clear();
         return builder.toString();
     }
 
+    // Метод определяет для какие методы нужно добавить для примитивов
     private boolean isNeedArraysMethod(){
         needGetArraysMethod = new HashSet();
         protoInput.getFields().stream()
-                .filter(distinctByKey(fd -> fd.getType().getImplementationType()))
                 .filter(field -> field.getType().isPrimitiveType() && field.isList())
+                .filter(distinctByKey(fd -> fd.getType().getImplementationType()))
                         .forEach(fld -> needGetArraysMethod.add(fld.getType()));
         return needGetArraysMethod.size() != 0;
     }
@@ -86,6 +90,7 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
             FieldData fieldData = (FieldData) fieldDatas.get(i);
             stringBuilder.append(this.resourceFormat.getString("private.get.byte.pack.method.start", fieldData.getName(), fieldData.getType().getJavaObjectType()));
         }
+        fieldDatas.clear();
         return stringBuilder.toString();
     }
 
@@ -120,7 +125,10 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
             if (!field.isList() && field.getType() == ValidTypes.ENUM_VALUE){
                 builder.append(this.resourceFormat.getString("public.createtobytearraymethod.trycontent.enum.nolist", field.getName(), String.valueOf(field.getSyntax()), JavaSourceCodeUtil.createCapitalLetterName(field.getType().getProtoType()), JavaSourceCodeUtil.createFieldNumberName(field.getName())));
             }
-
+            // Если объект/не лист/не строка
+            else if (!field.getType().isPrimitiveType() && field.getType() != ValidTypes.STRING && !field.isList()){
+                builder.append(this.resourceFormat.getString("public.createtobytearraymethod.object.nolist.nostring", field.getName()));
+            }
 
 
             else if (field.isList()) {
@@ -165,7 +173,14 @@ public final class InstanceMethodsBuilderImpl implements InstanceMethodsBuilder 
             else if (field.isList() && field.getType().isPrimitiveType()){
                 builder.append(this.resourceFormat.getString("packageprotected.static.list.primitive", JavaSourceCodeUtil.createFieldNumberName(field.getName()), field.getName(), String.valueOf(field.getSyntax()), getPacked(field), field.getType().getName()));
             }
-
+            // Если поле - объект/не лист/не строка ЗДЕСЬ БОЛЬШЕ НИЧЕГО НЕ ИСПРАВЛЯТЬ
+            else if (!field.isList() && !field.getType().isPrimitiveType() && field.getType() != ValidTypes.STRING){
+                builder.append(this.resourceFormat.getString("packageprotected.static.nolist.object", JavaSourceCodeUtil.createFieldNumberName(field.getName()), field.getName(), field.getType().getJavaObjectType()));
+            }
+            // Если поле - объект/не лист/строка ЗДЕСЬ БОЛЬШЕ НИЧЕГО НЕ ИСПРАВЛЯТЬ
+            else if (!field.isList() && field.getType() == ValidTypes.STRING){
+                builder.append(this.resourceFormat.getString("packageprotected.static.nolist.object.string", JavaSourceCodeUtil.createFieldNumberName(field.getName()), field.getName(), String.valueOf(field.getSyntax())));
+            }
 
 
 
